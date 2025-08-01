@@ -11,7 +11,7 @@ services:
       - pngnet
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.prod
     volumes:
@@ -53,6 +53,7 @@ services:
       - ./backend/staticfiles:/backend/staticfiles:ro
       - ./backend/media:/backend/media
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/www:/var/www/certbot # <--- এখানে certbot challenge ফাইল রাখার জন্য মাউন্ট
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - pngnet
