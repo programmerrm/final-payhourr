@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body,
+main,
+section,
+header,
+footer {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  width: 0px;
+}
+
+div.dt-container {
+  width: 1600px;
+  margin: 0 auto;
+}
+
+.dt-layout-cell {
+  margin-bottom: 15px;
+}
+
+.dt-length select {
+  padding: 4px;
+}
+
+.dt-search {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dt-search input {
+  padding: 8px 10px;
+}
+
+.dt-container .dt-layout-row:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dt-scroll-head {
+  display: none !important;
+}
