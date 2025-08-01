@@ -13,7 +13,7 @@ services:
       - ./backend:/app
     command: ["/app/entrypoint.sh"]
     environment:
-      - DATABASE_URL=sqlite:///db.sqlite3  # or your real DB URL
+      - DATABASE_URL=sqlite:///db.sqlite3
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - redis
@@ -29,7 +29,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     ports:
-      - "3001:80"   # Frontend served by nginx on port 80 inside container
+      - "3001:80"
     depends_on:
       - backend
 
