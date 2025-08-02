@@ -7,7 +7,7 @@ from app.settings.base import *
 from datetime import timedelta
 
 DEBUG = False
-ALLOWED_HOSTS = ['payhourr.com']
+ALLOWED_HOSTS = ['payhourr.com', 'api.payhourr.com']
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', None)
 
 DATABASES = {
@@ -17,7 +17,15 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['https://payhourr.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://payhourr.com',
+    'https://api.payhourr.com',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://payhourr.com',
+    'https://api.payhourr.com',
+]
 
 SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(min=5)
 SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'] = timedelta(days=1)

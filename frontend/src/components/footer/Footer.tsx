@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
     const { FaFacebook, FaInstagram, FaLinkedin } = ReactIcons;
     return (
         <footer
-            className="!h-screen text-white pt-15 pb-5 bg-no-repeat bg-cover bg-center"
+            className="text-white pt-15 pb-5 md:pb-8 bg-no-repeat bg-cover bg-center"
             style={{ backgroundImage: `url(${BG})` }}
         >
             <div className="max-w-screen-2xl conatiner mx-auto px-2.5 lg:px-5 w-full">

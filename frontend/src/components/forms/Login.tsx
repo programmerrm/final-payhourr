@@ -41,8 +41,8 @@ export const LoginForm = () => {
             navigate(`/dashboard/${username}/`);
             toast.success("Login successfully");
         } catch (error: any) {
-            console.log(error.message);
-            toast.error("Login failed. Please check the input.");
+            toast.error(error?.data?.message);
+            alert(error?.data?.message);
         }
     };
 
