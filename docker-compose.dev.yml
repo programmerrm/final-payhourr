@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: backend-dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - ./backend/.env.dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    command: daphne app.asgi:application --port 8000 --bind 0.0.0.0
+    restart: unless-stopped
+
+  redis:
+    container_name: redis-dev
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  celery:
+    container_name: celery-dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: celery -A app worker -l info
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - ./backend/.env.dev
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped
+
+  celery-beat:
+    container_name: celery-beat-dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: celery -A app beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - ./backend/.env.dev
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped

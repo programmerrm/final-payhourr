@@ -22,6 +22,7 @@ except Exception as e:
 env = environ.Env()
 
 INSTALLED_APPS = [
+    'daphne',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'channels',
+    
     'accounts',
     'configuration',
     'chat',
@@ -69,6 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
+ASGI_APPLICATION = 'app.asgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -121,6 +124,8 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_ALL_ORIGINS = False
 
+JWT_SECRET_KEY = 'django-insecure-ie75-++_k&c+)2$#)5hl*g^kwy$5mjj+%318%%wfe3!(yb#3i#'
+
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -128,20 +133,11 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ('rest_framework_simplejwt.tokens.AccessToken',),
     "TOKEN_BLACKLIST_ENABLED": True,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": os.getenv('DJANGO_SECRET_KEY'),
+    "SIGNING_KEY": JWT_SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "id",
-}
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
 }
 
 FRONTEND_DOMAIN=os.getenv('FRONTEND_DOMAIN')

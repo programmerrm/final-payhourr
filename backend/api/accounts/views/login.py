@@ -13,7 +13,6 @@ class LoginViewSet(APIView):
     renderer_classes = [JSONRenderer]
 
     def post(self, request, *args, **kwargs):
-        print('Request data : ', request.data)
         serializer = LoginSerializer(data=request.data, context={'request': request})
         
         if serializer.is_valid():
@@ -40,3 +39,4 @@ class LoginViewSet(APIView):
             'message': 'Login failed. Please check the input.',
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+    

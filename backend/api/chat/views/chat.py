@@ -1,17 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from chat.models import Message
-from api.chat.serializers.chat import MessageSerializer
+from chat.models import Chat
+from api.chat.serializers.chat import ChatSerializer
+from django.db.models import Q
 
-class MessageList(APIView):
-    def get(self, request, *args, **kwargs):
-        messages = Message.objects.all()
-        serializer = MessageSerializer(messages, many=True)
+class ChatList(APIView):
+    def get(self, request, room_name, *args, **kwargs):
+        participants = room_name.split("__")
+        if len(participants) != 2:
+            return Response({"error": "Invalid room name"}, status=400)
+
+        user1, user2 = participants
+
+        messages = Chat.objects.filter(
+            Q(sender__username=user1, receiver__username=user2) |
+            Q(sender__username=user2, receiver__username=user1)
+        ).order_by("timestamp")  # Order by time ascending
+
+        serializer = ChatSerializer(messages, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        serializer = MessageSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)

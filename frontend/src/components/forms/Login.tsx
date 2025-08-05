@@ -29,11 +29,8 @@ export const LoginForm = () => {
         dispatch(toggleForm("register"));
     };
 
-    // Handle form submission
     const onSubmitForm = async (formData: LoginProps) => {
-        console.log("form data : ", formData);
         try {
-            await addLogingUser(formData).unwrap();
             const { data } = await addLogingUser(formData).unwrap();
             const username = data.user.username;
             reset();
@@ -41,10 +38,21 @@ export const LoginForm = () => {
             navigate(`/dashboard/${username}/`);
             toast.success("Login successfully");
         } catch (error: any) {
-            toast.error(error?.data?.message);
-            alert(error?.data?.message);
+            const errorData = error?.data;
+
+            if (errorData?.errors) {
+                if (errorData.errors.email) {
+                    alert(`Email: ${errorData.errors.email[0]}`);
+                }
+
+                if (errorData.errors.password) {
+                    alert(`Password: ${errorData.errors.password[0]}`);
+                }
+            } else if (errorData?.message) {
+                alert(errorData.message);
+            }
         }
-    };
+    }
 
     return (
         <div className="flex flex-col gap-y-5 py-6 px-2 sm:py-10 sm:px-8 w-full max-w-xl bg-white rounded-2xl relative mx-auto overflow-y-auto max-h-[90vh]">

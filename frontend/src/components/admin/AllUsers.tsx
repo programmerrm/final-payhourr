@@ -79,6 +79,7 @@ export default function AllUsers() {
                     />
                 </div>
             </div>
+
             {/* Table */}
             <div className="overflow-x-auto rounded-xl shadow-lg bg-white">
                 <table className="min-w-full text-sm text-center">
@@ -167,13 +168,17 @@ export default function AllUsers() {
                     </tbody>
                 </table>
             </div>
+            
+            {/* Pagination */}      
             <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
+
             <UserDeleteDialog
                 showConfirm={showConfirm}
                 deleting={deleting}
                 closeConfirmDialog={closeConfirmDialog}
                 handleDeleteConfirm={handleDeleteConfirm}
             />
+
             {/* Pass userId and close handler */}
             {viewUserId !== null && (
                 <UserShowDialog userId={viewUserId} onClose={closeViewDialog} />

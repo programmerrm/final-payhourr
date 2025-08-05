@@ -13,8 +13,6 @@ import WorkCompletedPendingApprovals from "../components/admin/WorkCompletedPend
 import WithdrawRequests from "../components/admin/WithdrawRequests";
 import ManualPaymentReleaseOption from "../components/admin/ManualPaymentReleaseOption";
 import DisputeManagment from "../components/admin/DisputeManagment";
-import MyConnectedBuyer from "../components/contributor/MyConnectedBuyer";
-import MyConnectedSeller from "../components/contributor/MyConnectedSeller";
 import Chat from "../components/contributor/Chat";
 import MyWallet from "../components/contributor/MyWallet";
 import Dispute from "../components/contributor/Dispute";
@@ -32,6 +30,7 @@ import PrivacyPolicy from "../pages/privacypolicy/PrivacyPolicy";
 import TermsAndConditions from "../pages/termsandconditions/TermsAndConditions";
 import DisputePolicy from "../pages/disputepolicy/DisputePolicy";
 import RefundPolicy from "../pages/refundpolicy/RefundPolicy";
+import MyConnectedUser from "../components/contributor/MyConnectedUser";
 
 export const Router = createBrowserRouter([
     {
@@ -151,16 +150,21 @@ export const Router = createBrowserRouter([
                     },
                     {
                         path: 'my-connected-buyer/',
-                        element: <MyConnectedBuyer />,
+                        element: <MyConnectedUser />,
                         handle: { title: 'My Connected Buyer' },
                     },
                     {
                         path: 'my-connected-seller/',
-                        element: <MyConnectedSeller />,
+                        element: <MyConnectedUser />,
                         handle: { title: 'My Connected Seller' },
                     },
+                    // {
+                    //     path: 'chat/',
+                    //     element: <Chat />,
+                    //     handle: { title: 'Chat' },
+                    // },
                     {
-                        path: 'chat/',
+                        path: 'chat/:roomName/',
                         element: <Chat />,
                         handle: { title: 'Chat' },
                     },
