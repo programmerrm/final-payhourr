@@ -30,7 +30,7 @@ export const Testimonial: React.FC = () => {
                             {[0, 1, 2, 3].map((slideIndex) => (
                                 <SwiperSlide key={slideIndex}>
                                     <div
-                                        className={`w-full ${slideIndex === activeIndex + 1 ? "bg-red-500" : "bg-black"
+                                        className={`w-full ${slideIndex === activeIndex + 1 ? "bg-[#ED1B24]" : "bg-black"
                                             } transition-all duration-300 rounded-3xl text-white`}
                                     >
                                         <div className="pt-5 md:pt-8 px-2.5 md:px-3 rounded-tl-4xl rounded-tr-4xl overflow-hidden space-y-3 md:space-y-5">
