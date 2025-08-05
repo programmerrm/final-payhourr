@@ -60,10 +60,10 @@ export const LoginForm = () => {
             </Link>
             <h2 className="text-3xl font-bold text-center pb-5">Login Form</h2>
             <form className="flex flex-col gap-y-5 w-full" onSubmit={handleSubmit(onSubmitForm)}>
-                <div className="flex flex-col flex-wrap gap-y-1.5">
+                <div className="flex flex-col gap-y-1.5">
                     <Field label={"Email/username"} error={errors.identifier}>
                         <input
-                            className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
+                            className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none w-full"
                             {...register("identifier", {
                                 required: "Email or username is required.",
                             })}
@@ -74,11 +74,11 @@ export const LoginForm = () => {
                         />
                     </Field>
                 </div>
-                <div className="flex flex-col flex-wrap gap-y-1.5">
+                <div className="flex flex-col gap-y-1.5">
                     <Field label={"Password"} error={errors.password}>
-                        <div className="flex flex-col flex-wrap gap-y-1.5 relative">
+                        <div className="flex flex-col gap-y-1.5 relative">
                             <input
-                                className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
+                                className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none w-full"
                                 {...register("password", {
                                     required: "Password is required.",
                                 })}
@@ -102,18 +102,18 @@ export const LoginForm = () => {
                     </Field>
                 </div>
                 <div>
-                    <Link className="text-blue-500 text-base font-medium underline" to={"/forgot-password/"} onClick={handleCloseForm}>Forgot Password</Link>
+                    <Link className="text-[#1F2942] text-base font-medium underline" to={"/forgot-password/"} onClick={handleCloseForm}>Forgot Password</Link>
                 </div>
-                <div className="flex flex-col flex-wrap">
-                    <button className="text-base font-medium py-3 px-5 text-white bg-blue-500 rounded-full border cursor-pointer" type="submit">
+                <div className="flex flex-col">
+                    <button className="text-base font-medium py-3 px-5 transition-all duration-300 ease-linear text-white bg-[#1F2942] hover:bg-[#ED1B24] rounded-full border cursor-pointer" type="submit">
                         Login
                     </button>
                 </div>
             </form>
-            <div className="flex flex-col flex-wrap justify-center items-center w-full">
+            <div className="flex flex-col justify-center items-center w-full">
                 <p className="text-base font-medium">
                     Don't have an account?{" "}
-                    <button className="text-blue-500" type="button" onClick={handleSwitchToRegister}>
+                    <button className="text-[#1F2942] underline" type="button" onClick={handleSwitchToRegister}>
                         Register
                     </button>
                 </p>

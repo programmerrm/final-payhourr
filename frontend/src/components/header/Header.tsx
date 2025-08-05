@@ -24,8 +24,8 @@ export const Header: React.FC = () => {
                     <img className="w-28 md:w-40" src={Logo} alt="" />
                 </Link>
                 <div className="flex items-center gap-x-2.5 md:gap-x-4">
-                    <Button text="Login" buttonType="button" variant="capitalize text-white text-lg font-medium transition-all duration-500 hover:bg-red-500 btn-style" handleFunction={handleLoginClick} />
-                    <Button text="Register" buttonType="button" variant="capitalize text-white text-lg font-medium bg-red-500 hover:bg-red-400 btn-style" handleFunction={handleRegisterClick} />
+                    <Button text="Login" buttonType="button" variant="capitalize text-white text-lg font-medium transition-all duration-500 hover:bg-[#ED1B24] btn-style" handleFunction={handleLoginClick} />
+                    <Button text="Register" buttonType="button" variant="capitalize text-white text-lg font-medium bg-[#ED1B24] hover:bg-red-400 btn-style" handleFunction={handleRegisterClick} />
                 </div>
             </div>
         </header>

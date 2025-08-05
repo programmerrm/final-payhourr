@@ -15,6 +15,6 @@ export const RoleBasedDashboard: React.FC = () => {
     } else if (role === "buyer") {
         return <BuyerDashboard />;
     } else {
-        return <div className="text-red-500">Unknown role. Please contact support.</div>;
+        return <div className="text-[#ED1B24]">Unknown role. Please contact support.</div>;
     }
 };

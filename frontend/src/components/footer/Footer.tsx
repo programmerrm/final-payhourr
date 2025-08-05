@@ -15,9 +15,9 @@ export const Footer: React.FC = () => {
             style={{ backgroundImage: `url(${BG})` }}
         >
             <div className="max-w-screen-2xl conatiner mx-auto px-2.5 lg:px-5 w-full">
-                <div className="flex flex-col flex-wrap w-full py-20">
-                    <div className="flex flex-col flex-wrap w-full">
-                        <div className="flex flex-col flex-wrap gap-y-8 w-full h-full">
+                <div className="flex flex-col w-full py-20">
+                    <div className="flex flex-col w-full">
+                        <div className="flex flex-col gap-y-8 w-full h-full">
                             <Link to="/">
                                 <img className="w-40" src={Logo} alt="" />
                             </Link>
@@ -26,16 +26,16 @@ export const Footer: React.FC = () => {
                                     <h3 className="text-2xl font-bold text-black">Company</h3>
                                     <ul className="space-y-1.5 font-medium text-base">
                                         <li>
-                                            <Link to="/what-is-payhourr/">What is PayHourr?</Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/what-is-payhourr/">What is PayHourr?</Link>
                                         </li>
                                         <li>
-                                            <Link to="/why-use-payhourr/">Why Use PayHourr?</Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/why-use-payhourr/">Why Use PayHourr?</Link>
                                         </li>
                                         <li>
-                                            <Link to="/our-mission/">Our Mission</Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/our-mission/">Our Mission</Link>
                                         </li>
                                         <li>
-                                            <Link to="/contact/">Contact</Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/contact/">Contact</Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -46,16 +46,16 @@ export const Footer: React.FC = () => {
                                     </h3>
                                     <ul className="space-y-1.5 font-medium text-base">
                                         <li>
-                                            <Link to="/buyer-guide/">Buyer Guide </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/buyer-guide/">Buyer Guide </Link>
                                         </li>
                                         <li>
-                                            <Link to="/seller-guide/">Seller Guide </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/seller-guide/">Seller Guide </Link>
                                         </li>
                                         <li>
-                                            <Link to="/secure-payment-process/">Secure Payment Process </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/secure-payment-process/">Secure Payment Process </Link>
                                         </li>
                                         <li>
-                                            <Link to="/faq/">FAQ</Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/faq/">FAQ</Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -63,16 +63,16 @@ export const Footer: React.FC = () => {
                                     <h3 className="text-2xl font-bold text-black">Legal</h3>
                                     <ul className="space-y-1.5 font-medium text-base">
                                         <li>
-                                            <Link to="/terms-of-services/">Terms of Service </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/terms-of-services/">Terms of Service </Link>
                                         </li>
                                         <li>
-                                            <Link to="/privacy-policy/">Privacy Policy </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/privacy-policy/">Privacy Policy </Link>
                                         </li>
                                         <li>
-                                            <Link to="/dispute-policy/">Dispute Policy </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/dispute-policy/">Dispute Policy </Link>
                                         </li>
                                         <li>
-                                            <Link to="/refund-policy/">Refund Policy </Link>
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:translate-x-[10px]" to="/refund-policy/">Refund Policy </Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -82,13 +82,13 @@ export const Footer: React.FC = () => {
                                     </h3>
                                     <ul className="space-y-2.5 font-medium text-base">
                                         <li className="flex flex-row flex-wrap items-center gap-x-5">
-                                            <Link to="/">
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:-translate-y-[10px]" to="/">
                                                 <FaFacebook className="text-2xl" />
                                             </Link>
-                                            <Link to="/">
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:-translate-y-[10px]" to="/">
                                                 <FaInstagram className="text-2xl" />
                                             </Link>
-                                            <Link to="/">
+                                            <Link className="inline-block transition-all duration-300 ease-linear hover:-translate-y-[10px]" to="/">
                                                 <FaLinkedin className="text-2xl" />
                                             </Link>
                                         </li>
@@ -115,11 +115,11 @@ export const Footer: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        <Link className="inline-flex items-center justify-center" to="#">
+                        <Link className="inline-flex items-center justify-center mt-5" to="#">
                             <img className="w-[60%]" src={SSL} alt="" />
                         </Link>
                     </div>
-                    <div className="flex flex-row flex-wrap justify-between items-center w-full text-black mt-20">
+                    <div className="flex flex-row flex-wrap justify-between items-center w-full text-black mt-10 md:mt-20">
                         <p className="text-base font-normal">
                             © 2025 Payhourr. All rights reserved. Develop by{" "}
                             <a href="https://dreamlabit.com/" target="_blank">

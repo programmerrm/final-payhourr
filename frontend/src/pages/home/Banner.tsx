@@ -20,8 +20,8 @@ export const Banner: React.FC = () => {
 
                     <div className="flex flex-row flex-wrap justify-center items-center gap-x-5 md:gap-x-10 w-full">
 
-                        <Link className="text-base md:text-lg font-medium py-2.5 md:py-3.5 px-10 md:px-16 rounded bg-[#ED1B24]" to={"/"}>Buyer</Link>
-                        <Link className="text-base md:text-lg font-medium py-2.5 md:py-3.5 px-10 md:px-16 rounded bg-[#1F2942]" to={"/"}>Seller</Link>
+                        <Link className="text-base md:text-lg font-medium py-2.5 md:py-3.5 px-10 md:px-16 rounded bg-[#ED1B24] transition-all ease-linear duration-300 hover:bg-[#1F2942]" to={"/"}>Buyer</Link>
+                        <Link className="text-base md:text-lg font-medium py-2.5 md:py-3.5 px-10 md:px-16 rounded bg-[#1F2942] transition-all ease-linear duration-300 hover:bg-[#ED1B24]" to={"/"}>Seller</Link>
 
                     </div>
 
