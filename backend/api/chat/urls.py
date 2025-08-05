@@ -1,7 +1,7 @@
 from django.urls import path
 from api.chat.views.connection_requests import ConnectionRequestSendView, ConnectionRequestsView, ConnectionRequestsUserDeleteView, ConnectionRequestsAddToConnectedUserList
 from api.chat.views.connected_users import ConnectedUsersView
-from api.chat.views.chat import ChatList
+from api.chat.views.chat import ChatList, FileUploadView
 
 urlpatterns = [
     path(
@@ -30,8 +30,13 @@ urlpatterns = [
         name='connected_users',
     ),
     path(
-       "chat/<str:room_name>/", 
+       "message/<str:room_name>/", 
        ChatList.as_view(), 
        name="chat-messages"
+    ),
+    path(
+        "file-upload/",
+        FileUploadView.as_view(),
+        name='file_upload',
     ),
 ]

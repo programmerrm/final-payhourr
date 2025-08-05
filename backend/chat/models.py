@@ -37,6 +37,10 @@ class Connected(models.Model):
         return f"{self.user.username}'s connections"
 
 class Chat(models.Model):
+    room_name = models.CharField(
+        max_length=500,
+        db_index=True
+    )
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -72,3 +76,50 @@ class Chat(models.Model):
 
     def __str__(self):
         return f"{self.sender.username} to {self.receiver.username} at {self.timestamp}"
+
+class Dispute(models.Model):
+    room_name = models.CharField(
+        max_length=500,
+    )
+    raised_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        related_name='disputes_raised', 
+        on_delete=models.CASCADE,
+    )
+    admin = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        related_name='disputes_handled', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+    )
+    subject = models.CharField(
+        max_length=500,
+    )
+    description = models.TextField(
+        max_length=5000,
+    )
+    priority = models.CharField(
+        max_length=20,
+        choices=[
+            ('easy', 'Easy'), 
+            ('medium', 'Medium'),
+            ('high', 'High'),
+        ],
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('completed', 'Completed'),
+            ('not_completed', 'Not Completed'),
+        ],
+        default='pending'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    def __str__(self):
+        return f"Dispute in {self.room_name} by {self.raised_by.username}"
+    
