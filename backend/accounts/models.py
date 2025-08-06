@@ -4,6 +4,7 @@ User model create
 """
 ##################################################################
 from django.db import models
+from django.db.models import Avg
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -169,6 +170,15 @@ class User(AbstractUser):
         if self.nid_back_side:
             self.nid_back_side.delete(save=False)
         super().delete(using=using, keep_parents=keep_parents)
+
+    @property
+    def average_rating(self):
+        result = self.ratings_received.aggregate(avg_rating=Avg('rate'))
+        return round(result['avg_rating'] or 0, 2)
+
+    @property
+    def total_ratings(self):
+        return self.ratings_received.count()
     
 class BlockedToken(models.Model):
     token = models.CharField(max_length=512)
@@ -177,3 +187,28 @@ class BlockedToken(models.Model):
     def __str__(self):
         return self.token
     
+class Rating(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ratings_received',
+    )
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ratings_given',
+    )
+    rate = models.PositiveSmallIntegerField()
+    description = models.TextField(
+        max_length=300,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'sender')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.sender.username} rated {self.user.username} - {self.rate}⭐"

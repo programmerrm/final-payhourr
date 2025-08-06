@@ -18,3 +18,15 @@ class ConnectedUsersView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Connected.objects.filter(user=self.request.user)
+
+class ConnectedUsersWithOutPaginationView(viewsets.ModelViewSet):
+    queryset = Connected.objects.all()
+    serializer_class = ConnectedUsersSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ConnectedUserFilter
+
+    def get_queryset(self):
+        return Connected.objects.filter(user=self.request.user)
+    

@@ -10,6 +10,11 @@ export const AdminMenu = [
         path: '/all-users/',
     },
     {
+        id: 2,
+        name: 'Chat',
+        path: '/chat/',
+    },
+    {
         id: 3,
         name: 'Transactions',
         path: '/transactions/',

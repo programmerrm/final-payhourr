@@ -1,6 +1,6 @@
 import django_filters
 from django.db.models import Q
-from chat.models import ConnectionRequest, Connected
+from chat.models import ConnectionRequest, Connected, Dispute
 
 class ConnectionRequestsFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(method='filter_by_sender_or_receiver')
@@ -29,3 +29,17 @@ class ConnectedUserFilter(django_filters.FilterSet):
             Q(connected_users__username__icontains=value) |
             Q(connected_users__email__icontains=value)
         ).distinct()
+
+class DisputeUserFilter(django_filters.FilterSet):
+    search = django_filters.CharFilter(method='filter_disputes')
+
+    class Meta:
+        model = Dispute
+        fields = ['search']
+
+    def filter_disputes(self, queryset, name, value):
+        return queryset.filter(
+            Q(subject__icontains=value) |
+            Q(against_user__username__icontains=value)
+        ).distinct()
+

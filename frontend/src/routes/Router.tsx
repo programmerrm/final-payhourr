@@ -158,11 +158,11 @@ export const Router = createBrowserRouter([
                         element: <MyConnectedUser />,
                         handle: { title: 'My Connected Seller' },
                     },
-                    // {
-                    //     path: 'chat/',
-                    //     element: <Chat />,
-                    //     handle: { title: 'Chat' },
-                    // },
+                    {
+                        path: 'chat/',
+                        element: <Chat />,
+                        handle: { title: 'Chat' },
+                    },
                     {
                         path: 'chat/:roomName/',
                         element: <Chat />,

@@ -1,7 +1,7 @@
-import { useMatches } from "react-router-dom";
-import { RequestForm } from "../forms/requestForm";
 import { useSelector } from "react-redux";
+import { useMatches } from "react-router-dom";
 import type { RootState } from "../../redux/store";
+import { RequestForm } from "../forms/requestForm";
 
 type RouteHandle = {
     title?: string;
@@ -16,7 +16,7 @@ export const TopBar: React.FC = () => {
     })?.handle as RouteHandle | undefined;
 
     return (
-        <div className="flex justify-between items-center mb-6 gap-x-4">
+        <div className="flex justify-between shrink-0 items-center mb-6 gap-x-4">
             <h2 className="text-2xl font-bold shrink-0" id="tab-title">
                 {currentTitle?.title}
             </h2>

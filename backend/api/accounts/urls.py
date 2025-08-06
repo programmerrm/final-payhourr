@@ -10,6 +10,7 @@ from api.accounts.views.delete import AdminUsersDeleteViewSet
 from api.accounts.views.delete import UserDeleteViewSet
 from api.accounts.views.password import PasswordChangeViewSet
 from api.accounts.views.forgot_password import ForgotPasswordViewSet, ResetPasswordViewSet
+from api.accounts.views.rating import RatingViewSet
 
 urlpatterns = [
     path(
@@ -76,5 +77,13 @@ urlpatterns = [
         'user/reset-password/<uidb64>/<token>/',
         ResetPasswordViewSet.as_view({'post': 'post'}),
         name='reset_password',
+    ),
+    path(
+        'ratings/',
+        RatingViewSet.as_view({
+            'get': 'list',
+            'post': 'create',
+        }),
+        name='ratings'
     ),
 ]

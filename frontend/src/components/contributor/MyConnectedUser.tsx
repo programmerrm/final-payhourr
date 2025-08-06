@@ -87,7 +87,7 @@ export default function MyConnectedUser() {
                                     <td className="px-6 py-4 font-medium text-gray-900">{user.user_id}</td>
                                     <td className="px-6 py-4">@{user.username}</td>
                                     <td className="px-6 py-4">5</td>
-                                    <td className="px-6 py-4">user online naki offline e ase sei ta</td>
+                                    <td className="px-6 py-4">offline</td>
                                     <td className="px-6 py-4 font-bold text-blue-600">
                                         <button
                                             type="button"

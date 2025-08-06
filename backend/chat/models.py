@@ -86,6 +86,13 @@ class Dispute(models.Model):
         related_name='disputes_raised', 
         on_delete=models.CASCADE,
     )
+    against_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='disputes_against',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     admin = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         related_name='disputes_handled', 
