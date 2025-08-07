@@ -42,43 +42,11 @@
 // };
 
 import React from "react";
-import { ReactIcons } from "../../../utils/ReactIcons";
 
-interface FileUploadProps {
-    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleFileUpload: () => void;
-    selectedFile: File | null;
-}
-
-export const FileUpload: React.FC<FileUploadProps> = ({
-    handleFileChange,
-    handleFileUpload,
-    selectedFile,
-}) => {
-    const { FaCloudUploadAlt } = ReactIcons;
+export const FileUpload: React.FC = () => {
+    
 
     return (
-        <div className="relative flex flex-row items-center gap-4">
-            {/* File Input */}
-            <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition">
-                <FaCloudUploadAlt className="w-6 h-6 sm:w-7 sm:h-7" />
-                <span>Choose a file</span>
-                <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileChange}
-                />
-            </label>
-
-            {/* Upload Button */}
-            <button
-                onClick={handleFileUpload}
-                className="bg-green-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 disabled:opacity-50"
-                disabled={!selectedFile}
-            >
-                <FaCloudUploadAlt />
-                <span>Upload</span>
-            </button>
-        </div>
+        <div>hjhj</div>
     );
 };

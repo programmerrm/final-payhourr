@@ -9,6 +9,13 @@ const disputeApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
+        addDisputeUpdate: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `/chat/dispute/${id}/`,
+                method: 'PATCH',
+                body: data,
+            }),
+        }),
         getDispute: builder.query<any, { search?: string; page?: number }>({
             query: ({ search = '', page = 1 }) => `/chat/dispute/?search=${search}&page=${page}`,
         }),
@@ -20,6 +27,8 @@ const disputeApi = apiSlice.injectEndpoints({
 
 export const {
     useAddDisputeMutation,
+    useAddDisputeUpdateMutation,
+
     useGetDisputeQuery,
     useGetSingleDisputeQuery,
 } = disputeApi;

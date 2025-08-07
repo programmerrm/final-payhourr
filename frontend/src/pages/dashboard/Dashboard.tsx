@@ -7,7 +7,7 @@ export default function Dashboard() {
         <section className="bg-gray-100 h-screen">
             <div className="flex h-full w-full flex-nowrap">
                 <AsideBar />
-                <main className="flex-1 p-6 flex flex-col h-full overflow-hidden">
+                <main className="flex-1 py-2.5 px-2.5 md:p-6 flex flex-col h-full overflow-hidden">
                     <TopBar />
                     <Outlet />
                 </main>

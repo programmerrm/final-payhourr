@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store";
-import { RatingForm } from "../../forms/RatingForm";
 import { CreateOfferForm } from "../../forms/CreateOfferForm";
+import { RatingForm } from "../../forms/RatingForm";
 
 interface ProfileProps {
     receiverUsername: string;
@@ -33,12 +33,18 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername }) => {
     };
 
     return (
-        <div className="flex flex-col gap-6 sm:flex-row sm:justify-between sm:items-center p-4">
-            <div>
-                <h2 className="text-2xl font-semibold text-gray-800">{auth?.username}</h2>
+        <div className="flex shrink-0 gap-6 sm:flex-row justify-between pl-4 items-center overflow-hidden rounded-full bg-gray-300">
+            <div className="flex gap-2 items-center">
+                <div className="size-8 md:size-14 rounded-full overflow-hidden">
+                    <img src="https://i.pravatar.cc/150?img=8" className="w-full h-full rounded-full object-cover" />
+                </div>
+                <div>
+                    <h2 className="text-sm md:text-2xl capitalize font-semibold text-gray-800">{auth?.username}</h2>
+                    <span className="text-xs">Active</span>
+                </div>
             </div>
 
-            <div className="space-x-3">
+            <div className="flex flex-col gap-1 md:gap-2">
                 {auth?.role === "buyer" ? (
                     <button
                         onClick={openRating}
@@ -50,14 +56,14 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername }) => {
                     <>
                         <button
                             type="button"
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                            className="text-xs md:text-base bg-green-600 text-white px-4 pr-5 py-2 md:py-2.5 rounded hover:bg-green-700 transition"
                             onClick={openOffer}
                         >
                             Create Offer
                         </button>
                         <button
                             onClick={openRating}
-                            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+                            className="text-xs md:text-base bg-indigo-600 text-white px-4 pr-5 py-2 md:py-2.5 rounded hover:bg-indigo-700 transition"
                         >
                             Rating Now
                         </button>

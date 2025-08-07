@@ -9,7 +9,7 @@ export default function Dispute() {
     const [search, setSearch] = useState<string>("");
     const [page, setPage] = useState<number>(1);
 
-    const { data, isLoading, isError } = useGetDisputeQuery(
+    const { data, isLoading, isError, refetch } = useGetDisputeQuery(
         { search, page },
         { refetchOnMountOrArgChange: true }
     );
@@ -32,10 +32,10 @@ export default function Dispute() {
     };
 
     return (
-        <div className="flex-grow overflow-auto px-6 py-8 bg-gray-50 rounded-xl shadow-inner">
+        <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-700 text-2xl font-medium">Dispute History</span>
+                    <span className="text-gray-700 text-base md:text-2xl font-medium">Dispute History</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-700 font-medium">Search:</label>
@@ -44,7 +44,7 @@ export default function Dispute() {
                         value={search}
                         onChange={handleSearchChange}
                         placeholder="Type to search..."
-                        className="border border-gray-300 px-4 py-2 rounded-md bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2640]"
+                        className="border border-gray-300 px-4 py-2 rounded-md bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2640] w-full"
                     />
                 </div>
             </div>
@@ -112,7 +112,7 @@ export default function Dispute() {
 
             <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
 
-            {selected !== null && <DisputeShow id={selected} onClose={handleCloseModal} />}
+            {selected !== null && <DisputeShow id={selected} onClose={handleCloseModal} refetch={refetch} />}
         </div>
     );
 }

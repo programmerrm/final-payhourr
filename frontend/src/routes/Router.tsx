@@ -31,6 +31,10 @@ import TermsAndConditions from "../pages/termsandconditions/TermsAndConditions";
 import DisputePolicy from "../pages/disputepolicy/DisputePolicy";
 import RefundPolicy from "../pages/refundpolicy/RefundPolicy";
 import MyConnectedUser from "../components/contributor/MyConnectedUser";
+import AdminChat from "../components/admin/admin-chat/AdminChat";
+import DepositRequests from "../components/admin/DepositRequests";
+import ConfirmPassword from "../pages/auth/ConfirmPassword";
+import PasswordChangeSuccess from "../pages/auth/PasswordChangeSuccess";
 
 export const Router = createBrowserRouter([
     {
@@ -99,6 +103,14 @@ export const Router = createBrowserRouter([
                 element: <ForgotPassword />,
             },
             {
+                path: '/confirm-password/:uidb64/:token',
+                element: <ConfirmPassword />,
+            },
+            {
+                path: '/password-change-success/',
+                element: <PasswordChangeSuccess />,
+            },
+            {
                 path: 'dashboard/:username/',
                 element: (
                     <PrivateRoute>
@@ -118,6 +130,16 @@ export const Router = createBrowserRouter([
                         handle: { title: "All - Users" },
                     },
                     {
+                        path: 'admin/chat/',
+                        element: <AdminChat />,
+                        handle: { title: "Admin Chat" },
+                    },
+                    {
+                        path: 'admin/chat/:roomName/',
+                        element: <AdminChat />,
+                        handle: { title: "Admin Chat" },
+                    },
+                    {
                         path: 'transactions/',
                         element: <Transactions />,
                         handle: { title: "Transactions" },
@@ -126,6 +148,11 @@ export const Router = createBrowserRouter([
                         path: 'work-completed-pending-approvals/',
                         element: <WorkCompletedPendingApprovals />,
                         handle: { title: "Work Completed Pending Approvals" },
+                    },
+                    {
+                        path: 'deposit-requests/',
+                        element: <DepositRequests />,
+                        handle: { title: "Deposit Requests" },
                     },
                     {
                         path: 'withdraw-requests/',

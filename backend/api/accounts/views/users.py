@@ -9,6 +9,7 @@ from api.accounts.serializers.users import UsersSerializer
 from api.accounts.filters.filters import UsersFilter
 from api.accounts.paginators.paginators import UsersPagination
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         return User.objects.exclude(role='admin')
     
 class UserViewSet(viewsets.ViewSet):
-    permission_classes = [IsRegularOrAdminUser]
+    permission_classes = [IsAuthenticated]
     parser_classes = [JSONParser]
     serializer_class = UsersSerializer
 

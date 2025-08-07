@@ -1,6 +1,5 @@
 import React from "react";
 import type { ChatMessage, UserInfo } from "../Chat";
-import { FileUpload } from "./FileUpload";
 import { MessageBox } from "./MessageBox";
 import { MessageInput } from "./MessageInput";
 import { Profile } from "./Profile";
@@ -8,7 +7,7 @@ import { Profile } from "./Profile";
 interface ChatAreaProps {
     messages: ChatMessage[];
     username: string;
-    renderUserAvatar: (user: UserInfo) => JSX.Element;
+    renderUserAvatar: (user: UserInfo) => React.ReactNode;
     isFileUrl: (text: string) => boolean;
     bottomRef: React.RefObject<HTMLDivElement | null>;
     message: string;
@@ -37,7 +36,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
     receiver,
 }) => {
     return (
-        <div className="w-full h-full px-5 py-5 flex flex-col overflow-scroll scrollbar-hidden">
+        <div className="w-full h-full grow p-2.5 md:px-5 md:py-5 flex flex-col space-y-2 md:space-y-4 overflow-scroll scrollbar-hidden">
             <Profile receiverUsername={receiver} />
             <MessageBox
                 messages={messages}
@@ -46,23 +45,19 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                 isFileUrl={isFileUrl}
                 bottomRef={bottomRef}
             />
-            <div className="bg-white p-3 border-t border-gray-200">
-                <div className="flex items-end gap-2 sm:gap-3">
-                    <FileUpload
-                        handleFileChange={handleFileChange}
-                        handleFileUpload={handleFileUpload}
-                        selectedFile={selectedFile}
-                    />
+            <div className="bg-white border border-gray-200 px-3 rounded-4xl">
+                <div className="flex items-center justify-between gap-2 sm:gap-3">
                     <MessageInput
                         roomName={roomName}
                         message={message}
                         setMessage={setMessage}
                         handleSend={handleSend}
                         selectedFile={selectedFile}
+                        handleFileChange={handleFileChange}
+                        handleFileUpload={handleFileUpload}
                     />
                 </div>
             </div>
-
         </div>
     );
 };

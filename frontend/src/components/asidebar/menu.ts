@@ -10,24 +10,29 @@ export const AdminMenu = [
         path: '/all-users/',
     },
     {
-        id: 2,
+        id: 3,
         name: 'Chat',
-        path: '/chat/',
+        path: '/admin/chat/',
     },
     {
-        id: 3,
+        id: 4,
         name: 'Transactions',
         path: '/transactions/',
     },
     {
-        id: 4,
+        id: 5,
         name: 'Work Completed & Pending Approvals',
         path: '/work-completed-pending-approvals/',
     },
     {
-        id: 5,
+        id: 6,
         name: 'Withdraw Requests',
         path: '/withdraw-requests/',
+    },
+    {
+        id: 7,
+        name: 'Deposit Requests',
+        path: '/deposit-requests/',
     },
     {
         id: 6,

@@ -25,7 +25,6 @@ export interface ChatMessage {
     message: string;
 }
 
-
 const isFilePath = (text: string) => /^\/?media\/.+/.test(text);
 
 export default function Chat() {
@@ -83,14 +82,9 @@ export default function Chat() {
         if (initialMessages && Array.isArray(initialMessages)) {
             const formatted = initialMessages.map((msg: any) => {
                 let msgContent = msg.content;
-                if (
-                    typeof msgContent === "string" &&
-                    isFilePath(msgContent) &&
-                    !msgContent.startsWith("http")
-                ) {
+                if (typeof msgContent === "string" && isFilePath(msgContent)) {
                     msgContent = normalizeUrl(msgContent);
                 }
-
                 return {
                     id: msg.id || uuidv4(),
                     sender: msg.sender,
@@ -108,11 +102,7 @@ export default function Chat() {
                 const data: ChatMessage = JSON.parse(lastMessage.data);
                 let normalizedMessage = data.message;
 
-                if (
-                    typeof normalizedMessage === "string" &&
-                    isFilePath(normalizedMessage) &&
-                    !normalizedMessage.startsWith("http")
-                ) {
+                if (typeof normalizedMessage === "string" && isFilePath(normalizedMessage)) {
                     normalizedMessage = normalizeUrl(normalizedMessage);
                 }
 
@@ -145,17 +135,11 @@ export default function Chat() {
         setMessage("");
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setSelectedFile(e.target.files[0]);
-        }
-    };
-
-    const handleFileUpload = async () => {
-        if (!selectedFile || !username || !receiver) return;
+    const handleFileUpload = async (file: File) => {
+        if (!file || !username || !receiver) return;
 
         const formData = new FormData();
-        formData.append("attachment", selectedFile);
+        formData.append("attachment", file);
         formData.append("receiver", receiver);
 
         try {
@@ -178,9 +162,17 @@ export default function Chat() {
         }
     };
 
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            setSelectedFile(file);
+            await handleFileUpload(file);
+        }
+    };
+
     return (
-        <div className="relative grow overflow-y-auto scrollbar-hidden w-full border-2 border-black/80 rounded">
-            <div className="grid grid-cols-[70%_30%] h-full">
+        <div className="relative grow overflow-y-auto scrollbar-hidden w-full border border-black/80 rounded">
+            <div className="flex h-full">
                 <ChatArea
                     messages={messages}
                     username={username || ""}
@@ -191,7 +183,7 @@ export default function Chat() {
                     setMessage={setMessage}
                     handleSend={handleSend}
                     handleFileChange={handleFileChange}
-                    handleFileUpload={handleFileUpload}
+                    handleFileUpload={() => {}}
                     selectedFile={selectedFile}
                     roomName={roomName || ""}
                     receiver={receiver}

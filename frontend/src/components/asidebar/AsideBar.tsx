@@ -18,7 +18,7 @@ export const AsideBar: React.FC = () => {
     };
 
     return (
-        <aside className="bg-[#1C2640] text-white w-90 p-6 pt-10 shrink-0 h-full flex flex-col relative overflow-auto">
+        <aside className="hidden lg:flex bg-[#1C2640] text-white p-6 pt-10 shrink-0 h-full flex-col relative overflow-auto">
             <ul className="space-y-1.5 flex-grow text-sm font-medium w-full">
                 {menuItems.map((item) => (
                     <li className="w-full" key={item.id}>

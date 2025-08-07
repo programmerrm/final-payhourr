@@ -65,7 +65,7 @@ export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({ onClose, recei
 
                 <h2 className="text-3xl font-bold text-center pb-5 text-[#1F2942]">Create Offer</h2>
 
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmitForm)} noValidate>
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmitForm)}>
 
                     <div className="flex flex-col gap-y-1.5">
                         <Field label="Subject" error={errors.subject}>

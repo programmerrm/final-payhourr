@@ -9,9 +9,17 @@ const userApi = apiSlice.injectEndpoints({
                 body: patchData,
             }),
         }),
+        addUpdateUser: builder.mutation({
+            query: ({ id, ...patchData }) => ({
+                url: `/accounts/user/update/${id}/`,
+                method: 'PATCH',
+                body: patchData,
+            }),
+        }),
     }),
 });
 
 export const {
     useAdminUpdateUserMutation,
+    useAddUpdateUserMutation,
 } = userApi;

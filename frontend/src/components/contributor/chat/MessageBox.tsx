@@ -4,7 +4,7 @@ import type { ChatMessage, UserInfo } from "../Chat";
 interface MessageBoxProps {
     messages: ChatMessage[];
     username: string;
-    renderUserAvatar: (user: UserInfo) => JSX.Element;
+    renderUserAvatar: (user: UserInfo) => React.ReactNode;
     isFileUrl: (text: string) => boolean;
     bottomRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -17,7 +17,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
     bottomRef,
 }) => {
     return (
-        <div className="flex-grow overflow-y-auto scrollbar-hidden bg-white p-4 rounded-lg mb-4 space-y-6">
+        <div className="flex-grow overflow-y-auto scrollbar-hidden bg-white p-2 md:p-4 rounded-lg mb-4 space-y-2 md:space-y-6">
             {messages.length === 0 ? (
                 <li className="text-center text-gray-500">No messages yet</li>
             ) : (
@@ -31,7 +31,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                     return (
                         <div
                             key={msg.id}
-                            className={`flex ${isOwnMessage ? "justify-end ml-auto" : "justify-start"} gap-3 max-w-lg`}
+                            className={`flex items-end ${isOwnMessage ? "justify-end ml-auto" : "justify-start"} gap-1 md:gap-3 max-w-lg`}
                         >
                             {!isOwnMessage && renderUserAvatar(msg.sender)}
 

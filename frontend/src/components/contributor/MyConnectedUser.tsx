@@ -1,10 +1,10 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 import { useGetConnectedUsersQuery } from "../../redux/features/chat/connectedUsers";
+import type { RootState } from "../../redux/store";
 import { ReactIcons } from "../../utils/ReactIcons";
 import { Pagination } from "../pagination/Pagination";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function MyConnectedUser() {
     const [search, setSearch] = useState<string>("");
@@ -33,11 +33,11 @@ export default function MyConnectedUser() {
     };
 
     return (
-        <div className="flex-grow overflow-auto px-6 py-8 bg-gray-50 rounded-xl shadow-inner">
+        <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner">
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-700 text-2xl font-medium">
+                    <span className="text-gray-700 text-base md:text-2xl font-medium">
                         My Connected {role === 'seller' ? 'Buyer' : 'Seller'} List
                     </span>
                 </div>
@@ -48,7 +48,7 @@ export default function MyConnectedUser() {
                         value={search}
                         onChange={handleSearchChange}
                         placeholder="Type to search..."
-                        className="border border-gray-300 px-4 py-2 rounded-md bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2640]"
+                        className="border border-gray-300 px-4 py-2 rounded-md bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2640] w-full"
                     />
                 </div>
             </div>

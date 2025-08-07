@@ -10,4 +10,3 @@ class DisputeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dispute
         fields = '__all__'
-        read_only_fields = ['raised_by', 'against_user', 'status', 'created_at', 'admin']
