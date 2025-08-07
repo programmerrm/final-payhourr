@@ -26,12 +26,16 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:3001',
     'http://127.0.0.1:8000',
+    'https://payhourr.com',
+    'https://api.payhourr.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:3001',
     'http://127.0.0.1:8000',
+    'https://payhourr.com',
+    'https://api.payhourr.com',
 ]
 
 REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
