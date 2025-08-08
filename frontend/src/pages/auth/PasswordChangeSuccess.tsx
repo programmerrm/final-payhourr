@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux";
 import { toggleAuthForm, toggleForm } from "../../redux/features/status/statusSlice";
+import Logo from "../../assets/images/png-color.png";
+import { Link } from "react-router-dom";
 
 export default function PasswordChangeSuccess() {
     const dispatch = useDispatch();
@@ -13,8 +15,10 @@ export default function PasswordChangeSuccess() {
         <section className="relative w-full h-screen bg-black flex items-center justify-center px-4">
             <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10 max-w-md w-full text-center">
                 <div className="flex flex-col items-center space-y-4">
-
-                    <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">Password Changed!</h2>
+                    <Link className="w-fit mx-auto" to={"/"}>
+                        <img className="w-28 md:w-40 mx-auto" src={Logo} alt="payhourr" />
+                    </Link>
+                    <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-5">Password Changed!</h2>
                     <p className="text-gray-600 text-sm md:text-base">
                         Your password has been successfully updated. You can now log in with your new credentials.
                     </p>

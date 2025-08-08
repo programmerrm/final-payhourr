@@ -35,12 +35,12 @@ export const AdminMenu = [
         path: '/deposit-requests/',
     },
     {
-        id: 6,
+        id: 8,
         name: 'Manual Payment Release Option',
         path: '/manual-payment-release-option/',
     },
     {
-        id: 7,
+        id: 9,
         name: 'Dispute Managment',
         path: '/dispute-managment/',
     },
@@ -69,18 +69,28 @@ export const SellerMenu = [
     },
     {
         id: 5,
+        name: 'Order',
+        path: '/order/',
+    },
+    {
+        id: 6,
         name: 'My Wallet',
         path: '/my-wallet/',
     },
     {
-        id: 6,
+        id: 7,
         name: 'Dispute',
         path: '/dispute/',
     },
     {
-        id: 7,
+        id: 8,
         name: 'Payment History',
         path: '/payment-history/',
+    },
+    {
+        id: 9,
+        name: 'Settings',
+        path: '/settings/',
     },
 ];
 
@@ -107,16 +117,26 @@ export const BuyerMenu = [
     },
     {
         id: 5,
+        name: 'Order',
+        path: '/order/',
+    },
+    {
+        id: 6,
         name: 'My Wallet',
         path: '/my-wallet/',
     },
     {
-        id: 6,
+        id: 7,
         name: 'Dispute',
         path: '/dispute/',
     },
     {
-        id: 7,
+        id: 8,
+        name: 'Settings',
+        path: '/settings/',
+    },
+    {
+        id: 9,
         name: 'Payment History',
         path: '/payment-history/',
     },

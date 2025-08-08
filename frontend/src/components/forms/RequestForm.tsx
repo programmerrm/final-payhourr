@@ -36,20 +36,20 @@ export const RequestForm: React.FC<RequestFormProps> = ({ placeholderValue }) =>
 
     return (
         <form className="flex flex-row basis-full md:basis-auto flex-wrap items-center justify-center order-3" onSubmit={handleSubmit(onSubmitForm)}>
-            <div className="relative flex flex-row flex-wrap items-center border-2 border-black rounded-full">
+            <div className="relative flex flex-row items-stretch border-2 border-white text-white rounded-full">
                 <Field label="" error={errors.user_id}>
                     <input
                         {...register("user_id", {
                             required: "",
                         })}
-                        className="placeholder:text-sm text-sm md:text-base border-none outline-none px-5 max-w-56"
+                        className="placeholder:text-sm placeholder:text-white text-sm md:text-base border-none outline-none px-5 max-w-56"
                         type="text"
                         name="user_id"
                         id="user_id"
                         placeholder={placeholderValue}
                     />
                 </Field>
-                <button className="bg-black text-white p-2 md:px-5 md:py-3.5 rounded-full" type="submit">
+                <button className="bg-white text-black p-2 md:px-5 md:py-3.5 rounded-full" type="submit">
                     <span className="hidden md:block">Send a Request</span>
                     <span className="md:hidden">
                         <IoSearchOutline className="text-lg" />

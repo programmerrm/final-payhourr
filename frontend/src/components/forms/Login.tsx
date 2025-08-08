@@ -1,5 +1,5 @@
 import { Field } from "../field/field";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ReactIcons } from "../../utils/ReactIcons";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Logo from "../../assets/images/png-color.png";
 
-export const LoginForm = () => {
+export const LoginForm:React.FC = () => {
     const navigate = useNavigate();
     const [isShow, setIsShow] = useState<boolean>(false);
     const { AiFillEye, AiFillEyeInvisible, IoCloseSharp } = ReactIcons;
@@ -39,17 +39,13 @@ export const LoginForm = () => {
             toast.success("Login successfully");
         } catch (error: any) {
             const errorData = error?.data;
-
-            if (errorData?.errors) {
-                if (errorData.errors.email) {
-                    alert(`Email: ${errorData.errors.email[0]}`);
-                }
-
-                if (errorData.errors.password) {
-                    alert(`Password: ${errorData.errors.password[0]}`);
-                }
-            } else if (errorData?.message) {
-                alert(errorData.message);
+            const errors = errorData?.errors;
+            if (errors && typeof errors === 'object') {
+                const firstKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstKey]?.[0];
+                toast.error(firstErrorMessage);
+            } else {
+                toast.error('No structured errors found.');
             }
         }
     }

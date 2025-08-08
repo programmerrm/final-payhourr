@@ -58,7 +58,6 @@ const paymentsApi = apiSlice.injectEndpoints({
             }),
         }),
 
-
         getPaymentMethod: builder.query<any, void>({
             query: () => '/payments/payment-options/',
         }),
@@ -68,8 +67,8 @@ const paymentsApi = apiSlice.injectEndpoints({
         getWithdraw: builder.query<any, { search?: string; page?: number }>({
             query: ({ search = '', page = 1 }) => `/payments/withdraws/?search=${search}&page=${page}`,
         }),
-        getTransaction: builder.query<any, void>({
-            query: () => ``,
+        getAllTransaction: builder.query<any, { search?: string; page?: number }>({
+            query: ({ search = '', page = 1 }) => `/payments/all-transactions/?search=${search}&page=${page}`,
         }),
         getPaymentHistory: builder.query<any, { page?: number }>({
             query: ({ page = 1 }) => `/payments/history/?page=${page}`,
@@ -96,7 +95,7 @@ export const {
     useGetPaymentMethodQuery,
     useGetDepositQuery,
     useGetWithdrawQuery,
-    useGetTransactionQuery,
+    useGetAllTransactionQuery,
     useGetPaymentHistoryQuery,
     useGetBalanceQuery,
     useGetPaymnetCountsQuery,

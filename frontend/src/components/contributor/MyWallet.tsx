@@ -23,8 +23,6 @@ export default function MyWallet() {
     const currentPage = page;
     const totalPages = paymentHistory?.pagination?.total_pages || 1;
 
-    console.log('paymentCounts : ', paymentCounts);
-
     return (
         <div className=" space-y-5">
             <div className="tab-content flex-grow overflow-auto flex flex-col lg:flex-row gap-6">
@@ -45,10 +43,6 @@ export default function MyWallet() {
                         <p className="mt-2 text-base lg:text-3xl font-extrabold text-indigo-600">{paymentCounts?.deposit_count}</p>
                     </div>
 
-                    <div className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 flex items-center justify-center flex-col">
-                        <h2 className="text-base lg:text-xl font-semibold text-gray-800">Refunded To Withdraw</h2>
-                        <p className="mt-2 text-base lg:text-3xl font-extrabold text-red-600">600</p>
-                    </div>
                     <div
                         className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center"
                         onClick={handleDepositeAmount}

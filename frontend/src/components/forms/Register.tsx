@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ import type { RegisterProps } from "../../types/auth/RegisterProps";
 import { ReactIcons } from "../../utils/ReactIcons";
 import { Field } from "../field/field";
 
-export const RegisterForm = () => {
+export const RegisterForm:React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -74,8 +74,15 @@ export const RegisterForm = () => {
       dispatch(toggleForm("login"));
       toast.success("Registration successful. Please login.");
     } catch (error: any) {
-      console.error(error.message);
-      toast.error("Registration failed. Please try again.");
+      const errorData = error?.data;
+      const errors = errorData?.errors;
+      if (errors && typeof errors === 'object') {
+        const firstKey = Object.keys(errors)[0];
+        const firstErrorMessage = errors[firstKey]?.[0];
+        toast.error(firstErrorMessage);
+      } else {
+        toast.error('No structured errors found.');
+      }
     }
   };
 

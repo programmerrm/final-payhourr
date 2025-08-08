@@ -35,6 +35,8 @@ import AdminChat from "../components/admin/admin-chat/AdminChat";
 import DepositRequests from "../components/admin/DepositRequests";
 import ConfirmPassword from "../pages/auth/ConfirmPassword";
 import PasswordChangeSuccess from "../pages/auth/PasswordChangeSuccess";
+import Order from "../components/contributor/Order";
+import Settings from "../components/contributor/Settings";
 
 export const Router = createBrowserRouter([
     {
@@ -201,6 +203,11 @@ export const Router = createBrowserRouter([
                         handle: { title: 'My Wallet' },
                     },
                     {
+                        path: 'order/',
+                        element: <Order />,
+                        handle: { title: 'Order' },
+                    },
+                    {
                         path: 'dispute/',
                         element: <Dispute />,
                         handle: { title: 'Dispute' },
@@ -209,6 +216,11 @@ export const Router = createBrowserRouter([
                         path: 'payment-history/',
                         element: <PaymentHistory />,
                         handle: { title: 'Payment History' },
+                    },
+                    {
+                        path: 'settings/',
+                        element: <Settings />,
+                        handle: { title: 'Settings' },
                     },
                 ],
             },

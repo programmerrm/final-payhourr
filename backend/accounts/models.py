@@ -14,7 +14,7 @@ from accounts.utils.genders import GENDERS
 from accounts.services.user_id import GENERATE_USER_ID
 from accounts.utils.image_upload import USER_DIRECTORY_PATH
 from accounts.utils.nid_upload import NID_DIRECTORY_PATH
-from core.utils import VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE, VALIDATE_EMAIL, VALIDATE_PHONE_NUMBER, VALIDATE_ALPHA, GENERATE_SLUG
+from core.utils import VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE, VALIDATE_EMAIL, VALIDATE_ALPHA, GENERATE_SLUG
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -60,23 +60,21 @@ class User(AbstractUser):
         unique=True,
         db_index=True,
         max_length=20,
-        validators=[VALIDATE_PHONE_NUMBER],
     )
     payment_number = models.CharField(
         unique=True,
         db_index=True,
         max_length=20,
-        validators=[VALIDATE_PHONE_NUMBER],
         null=True,
         blank=True,
     )
     first_name = models.CharField(
         max_length=30,
-        validators=[MinLengthValidator(3), VALIDATE_ALPHA],
+        validators=[MinLengthValidator(3)],
     )
     last_name = models.CharField(
         max_length=30,
-        validators=[MinLengthValidator(3), VALIDATE_ALPHA],
+        validators=[MinLengthValidator(3)],
     )
     nid_front_side = models.ImageField(
         upload_to=NID_DIRECTORY_PATH,

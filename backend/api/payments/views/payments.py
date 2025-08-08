@@ -7,7 +7,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from api.payments.serializers.payments import DepositHistorySerializer, WithdrawHistorySerializer
-from api.payments.paginators.paginators import PaymentHistoryPagination
+from api.payments.paginators.paginators import PaymentHistoryPagination, CombinedTransactionPagination
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from api.payments.serializers.payments import BalanceSerializer
@@ -15,6 +15,8 @@ from api.payments.serializers.payments import BalanceSerializer
 from api.payments.filters.filters import DepositFilter, WithdrawFilter
 from api.payments.paginators.paginators import DepositPagination, WithdrawPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAdminUser
+from django.db.models import Q
 
 class IsAdminOrOwner(permissions.BasePermission):
     """
@@ -98,8 +100,6 @@ class PaymentHistoryView(GenericAPIView):
 
         return Response(combined)
 
-
-
 class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
     permission_classes = [IsAdminOrOwner]
@@ -112,9 +112,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(buyer=self.request.user)
-
-
-
 
 class TotalDepositAndWithdrawCountView(APIView):
     permission_classes = [IsAuthenticated]
@@ -136,4 +133,36 @@ class BalanceView(RetrieveAPIView):
     def get_object(self):
         balance, _ = Balance.objects.get_or_create(user=self.request.user)
         return balance
+
+class AllTransactionsViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    pagination_class = CombinedTransactionPagination
+
+    def list(self, request):
+        search = request.query_params.get('search', '').strip()
+
+        # Apply the same logic from DepositFilter and WithdrawFilter
+        deposit_queryset = Deposit.objects.all()
+        withdraw_queryset = Withdraw.objects.all()
+
+        if search:
+            filter_query = Q(user__username__icontains=search) | Q(user__email__icontains=search)
+            deposit_queryset = deposit_queryset.filter(filter_query)
+            withdraw_queryset = withdraw_queryset.filter(filter_query)
+
+        deposit_data = DepositHistorySerializer(deposit_queryset, many=True).data
+        for item in deposit_data:
+            item['type'] = 'deposit'
+
+        withdraw_data = WithdrawHistorySerializer(withdraw_queryset, many=True).data
+        for item in withdraw_data:
+            item['type'] = 'withdraw'
+
+        combined = sorted(deposit_data + withdraw_data, key=lambda x: x['created_at'], reverse=True)
+
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(combined, request)
+        return paginator.get_paginated_response(page)
+
     
+

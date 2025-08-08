@@ -8,10 +8,14 @@ import { Notification } from "../components/notification/Notification";
 export default function Root() {
     const isAuthFormShow = useSelector((state: RootState) => state.status.isAuthFormShow);
     return (
-        <Suspense>
+        <>
             <Notification />
-            {isAuthFormShow && <LoginRegister />}
-            <Outlet />
-        </Suspense>
+            <section>
+                <Suspense>
+                    {isAuthFormShow && <LoginRegister />}
+                    <Outlet />
+                </Suspense>
+            </section>
+        </>
     );
 }

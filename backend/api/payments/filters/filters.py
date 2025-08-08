@@ -27,4 +27,4 @@ class WithdrawFilter(django_filters.FilterSet):
             Q(user__username__icontains=value) |
             Q(user__email__icontains=value)
         ).distinct()
-    
+

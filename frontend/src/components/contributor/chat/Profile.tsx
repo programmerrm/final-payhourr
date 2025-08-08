@@ -45,7 +45,7 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername }) => {
             </div>
 
             <div className="flex flex-col gap-1 md:gap-2">
-                {auth?.role === "buyer" ? (
+                {auth?.role === "seller" ? (
                     <button
                         onClick={openRating}
                         className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"

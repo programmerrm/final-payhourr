@@ -81,3 +81,21 @@ class PaymentHistoryPagination(PageNumberPagination):
             "data": data,
         })
     
+class CombinedTransactionPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+    def get_paginated_response(self, data):
+        return Response({
+            "success": True,
+            "message": "All transactions history data fetching response successfully",
+            "pagination": {
+                "count": self.page.paginator.count,
+                "current_page": self.page.number,
+                "total_pages": self.page.paginator.num_pages,
+                "has_next": self.page.has_next(),
+                "has_previous": self.page.has_previous(),
+            },
+            "data": data,
+        })

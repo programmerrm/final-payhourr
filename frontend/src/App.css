@@ -56,3 +56,7 @@ div.dt-container {
 .dt-scroll-head {
   display: none !important;
 }
+
+.Toastify__toast-container {
+  z-index: 99999999 !important;
+}
