@@ -25,7 +25,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         return User.objects.exclude(role='admin')
     
 class UserViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRegularOrAdminUser]
     parser_classes = [JSONParser]
     serializer_class = UsersSerializer
 
@@ -36,5 +36,9 @@ class UserViewSet(viewsets.ViewSet):
             raise NotFound(detail="User not found")
 
         serializer = self.serializer_class(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            'success': True,
+            'message': 'User data fetching response successfully',
+            'data': serializer.data,
+        }, status=status.HTTP_200_OK)
     

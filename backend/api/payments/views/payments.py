@@ -1,8 +1,6 @@
 from rest_framework import viewsets, permissions
-from payments.models import PaymentOption, Payment, Withdraw, Deposit, Balance
-from api.payments.serializers.payments import (
-    PaymentOptionSerializer, PaymentSerializer, WithdrawSerializer, DepositSerializer
-)
+from payments.models import Payment, Withdraw, Deposit
+from api.payments.serializers.payments import PaymentSerializer, WithdrawSerializer, DepositSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -40,11 +38,6 @@ class IsAdminOrOwner(permissions.BasePermission):
         if isinstance(obj, Payment):
             return obj.buyer == request.user or obj.seller == request.user
         return False
-
-class PaymentOptionViewSet(viewsets.ModelViewSet):
-    queryset = PaymentOption.objects.all()
-    serializer_class = PaymentOptionSerializer
-    permission_classes = [IsAdminOrOwner]
 
 class DepositViewSet(viewsets.ModelViewSet):
     serializer_class = DepositSerializer
@@ -130,10 +123,6 @@ class BalanceView(RetrieveAPIView):
     serializer_class = BalanceSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        balance, _ = Balance.objects.get_or_create(user=self.request.user)
-        return balance
-
 class AllTransactionsViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     pagination_class = CombinedTransactionPagination
@@ -141,7 +130,6 @@ class AllTransactionsViewSet(viewsets.ViewSet):
     def list(self, request):
         search = request.query_params.get('search', '').strip()
 
-        # Apply the same logic from DepositFilter and WithdrawFilter
         deposit_queryset = Deposit.objects.all()
         withdraw_queryset = Withdraw.objects.all()
 
@@ -163,6 +151,3 @@ class AllTransactionsViewSet(viewsets.ViewSet):
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(combined, request)
         return paginator.get_paginated_response(page)
-
-    
-

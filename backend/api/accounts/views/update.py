@@ -3,10 +3,9 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer, MultiPartRenderer
 from permissions.admin import IsAdminUser
-from permissions.user import IsRegularUser
 from django.contrib.auth import get_user_model
 from api.accounts.serializers.update import UpdateUserSerializer
-from rest_framework.permissions import IsAuthenticated
+from permissions.user import IsSellerOrBuyer
 
 User = get_user_model()
 
@@ -45,7 +44,7 @@ class AdminUpdateUserViewSet(viewsets.ViewSet):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class UpdateUserViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSellerOrBuyer]
     renderer_classes = [JSONRenderer, MultiPartRenderer]
     parser_classes = [JSONParser]
 

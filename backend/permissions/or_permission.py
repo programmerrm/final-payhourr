@@ -10,5 +10,5 @@ class IsRegularOrAdminUser(BasePermission):
     def has_permission(self, request, view):
         return bool(
             request.user and request.user.is_authenticated and 
-            request.user.role in ['user', 'admin']
+            request.user.role in ['seller', 'buyer', 'admin']
         )

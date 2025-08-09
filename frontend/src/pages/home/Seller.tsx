@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import SellerBg from "../../assets/images/seller-bg.png";
+import SellerBg from "../../assets/images/seller-bg.jpg";
 import SellerImg from "../../assets/images/seller.png";
 import { toggleForm } from "../../redux/features/status/statusSlice";
 import type { RootState } from "../../redux/store";

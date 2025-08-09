@@ -36,11 +36,14 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'channels',
+    'django_celery_beat',
     
     'accounts',
     'configuration',
     'chat',
+    'orders',
     'payments',
+    'reviews',
 ]
 
 MIDDLEWARE = [
@@ -128,8 +131,6 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_ALL_ORIGINS = False
 
-JWT_SECRET_KEY = 'django-insecure-ie75-++_k&c+)2$#)5hl*g^kwy$5mjj+%318%%wfe3!(yb#3i#'
-
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -137,11 +138,22 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ('rest_framework_simplejwt.tokens.AccessToken',),
     "TOKEN_BLACKLIST_ENABLED": True,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": JWT_SECRET_KEY,
+    "SIGNING_KEY": os.getenv('DJANGO_SECRET_KEY'),
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "id",
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'send-delivery-reminder-every-minute': {
+        'task': 'orders.tasks.send_delivery_reminder_emails',
+        'schedule': 60.0,
+    },
 }
 
 FRONTEND_DOMAIN=os.getenv('FRONTEND_DOMAIN')

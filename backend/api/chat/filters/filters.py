@@ -42,4 +42,3 @@ class DisputeUserFilter(django_filters.FilterSet):
             Q(subject__icontains=value) |
             Q(against_user__username__icontains=value)
         ).distinct()
-

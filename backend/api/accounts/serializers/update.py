@@ -6,4 +6,4 @@ User = get_user_model()
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ['password', 'groups', 'user_permissions']

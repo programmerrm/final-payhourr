@@ -1,135 +1,167 @@
 ##################################################################
 """
-User model create
+User Model Create
 """
 ##################################################################
 from django.db import models
-from django.db.models import Avg
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinLengthValidator, RegexValidator
-from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.validators import MinLengthValidator, RegexValidator, MinValueValidator, MaxValueValidator, EmailValidator
+from django.core.exceptions import ValidationError
+from decimal import Decimal
 from accounts.managers import UserManager
 from accounts.utils.roles import ROLES
 from accounts.utils.genders import GENDERS
 from accounts.services.user_id import GENERATE_USER_ID
 from accounts.utils.image_upload import USER_DIRECTORY_PATH
 from accounts.utils.nid_upload import NID_DIRECTORY_PATH
-from core.utils import VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE, VALIDATE_EMAIL, VALIDATE_ALPHA, GENERATE_SLUG
+from core.utils import VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE, GENERATE_SLUG
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
-
 class User(AbstractUser):
+    """
+    Custom User model extending AbstractUser with additional fields.
+    Ensures unique email and username, adds user roles, and supports profile images and NID uploads.
+    """
+
     user_id = models.CharField(
         max_length=9,
-        db_index=True,
         unique=True,
+        db_index=True,
         editable=False,
         validators=[MinLengthValidator(9)],
+        help_text=_("Unique 9 digit user ID"),
     )
     image = models.ImageField(
         upload_to=USER_DIRECTORY_PATH,
         validators=[VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE],
         null=True,
         blank=True,
+        help_text=_("Profile picture"),
     )
     username = models.CharField(
+        max_length=30,
         unique=True,
         db_index=True,
-        max_length=30,
         validators=[
             MinLengthValidator(3),
             RegexValidator(
                 regex=r'^[a-zA-Z0-9_]+$',
-                message='Username can only contain letters, numbers, and underscores.',
-            ),
+                message=_('Username can only contain letters, numbers, and underscores.')
+            )
         ],
+        help_text=_("Unique username"),
     )
     slug = models.SlugField(
-        unique=True,
         max_length=40,
+        unique=True,
         editable=False,
     )
     email = models.EmailField(
-        unique=True,
         max_length=60,
+        unique=True,
         db_index=True,
-        validators=[VALIDATE_EMAIL, MinLengthValidator(10)],
+        validators=[EmailValidator(), MinLengthValidator(10)],
+        help_text=_("Unique email address"),
     )
     number = models.CharField(
+        max_length=20,
         unique=True,
         db_index=True,
-        max_length=20,
+        help_text=_("Phone number"),
     )
     payment_number = models.CharField(
-        unique=True,
-        db_index=True,
         max_length=20,
+        unique=True,
         null=True,
         blank=True,
+        db_index=True,
+        help_text=_("Payment number (optional)"),
+    )
+    balance = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        validators=[MinValueValidator(0)],
+        help_text=_("User account balance"),
     )
     first_name = models.CharField(
         max_length=30,
         validators=[MinLengthValidator(3)],
+        help_text=_("First name"),
     )
     last_name = models.CharField(
         max_length=30,
         validators=[MinLengthValidator(3)],
+        help_text=_("Last name"),
+    )
+    nid_card_number = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text=_("National ID card number"),
     )
     nid_front_side = models.ImageField(
         upload_to=NID_DIRECTORY_PATH,
         validators=[VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE],
         null=True,
         blank=True,
+        help_text=_("NID front side image"),
     )
     nid_back_side = models.ImageField(
         upload_to=NID_DIRECTORY_PATH,
         validators=[VALIDATE_IMAGE_EXTENSION, VALIDATE_IMAGE_SIZE],
         null=True,
         blank=True,
+        help_text=_("NID back side image"),
     )
-    
     date_of_birth = models.DateField(
         null=True,
         blank=True,
+        help_text=_("Date of birth"),
     )
     gender = models.CharField(
         max_length=20,
+        choices=GENDERS,
         null=True,
         blank=True,
-        choices=GENDERS,
+        help_text=_("Gender"),
     )
     address = models.CharField(
         max_length=80,
         validators=[MinLengthValidator(10)],
         null=True,
         blank=True,
+        help_text=_("Address"),
     )
     zip_code = models.CharField(
         max_length=10,
         validators=[MinLengthValidator(3)],
         null=True,
         blank=True,
+        help_text=_("ZIP or postal code"),
     )
     country = models.CharField(
         max_length=20,
         validators=[MinLengthValidator(3)],
         null=True,
         blank=True,
+        help_text=_("Country"),
     )
     role = models.CharField(
-        default='user',
+        max_length=10,
         choices=ROLES,
+        default='user',
+        help_text=_("User role"),
     )
-    terms_accept = models.BooleanField(default=False,)
-    is_verify = models.BooleanField(default=False,)
-    is_active = models.BooleanField(default=True,)
-    is_block = models.BooleanField(default=False,)
-    is_staff = models.BooleanField(default=False,)
-    is_superuser = models.BooleanField(default=False,)
-    date_joined = models.DateTimeField(auto_now_add=True,)
-    updated_at = models.DateTimeField(auto_now=True,)
-    
+    terms_accept = models.BooleanField(default=False, help_text=_("Accept terms and conditions"))
+    is_verify = models.BooleanField(default=False, help_text=_("Is user verified"))
+    is_active = models.BooleanField(default=True)
+    is_block = models.BooleanField(default=False, help_text=_("Is user blocked"))
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'number']
 
@@ -137,19 +169,28 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ['-date_joined']
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username or self.email
 
-    def clean(self):
+    def clean(self) -> None:
+        """
+        Ensure that only one user can have the admin role.
+        """
         if self.role == 'admin':
-            existing_admin = User.objects.filter(role='admin')
+            qs = User.objects.filter(role='admin')
             if self.pk:
-                existing_admin = existing_admin.exclude(pk=self.pk)
-            if existing_admin.exists():
-                raise DjangoValidationError(_('Only one admin is allowed.'))
+                qs = qs.exclude(pk=self.pk)
+            if qs.exists():
+                raise ValidationError(_('Only one admin is allowed.'))
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
+        """
+        Override save method to generate user_id and slug on creation
+        and update slug if username changes.
+        """
         if not self.pk:
             self.user_id = GENERATE_USER_ID(self.role)
             self.slug = GENERATE_SLUG(self.username)
@@ -160,53 +201,20 @@ class User(AbstractUser):
 
         super().save(*args, **kwargs)
 
-    def delete(self, using=None, keep_parents=False):
-        if self.image:
-            self.image.delete(save=False)
-        if self.nid_front_side:
-            self.nid_front_side.delete(save=False)
-        if self.nid_back_side:
-            self.nid_back_side.delete(save=False)
+    def delete(self, using=None, keep_parents=False) -> None:
+        """
+        Delete associated files on user deletion.
+        """
+        storage_fields = ['image', 'nid_front_side', 'nid_back_side']
+        for field_name in storage_fields:
+            field = getattr(self, field_name)
+            if field:
+                field.delete(save=False)
         super().delete(using=using, keep_parents=keep_parents)
 
-    @property
-    def average_rating(self):
-        result = self.ratings_received.aggregate(avg_rating=Avg('rate'))
-        return round(result['avg_rating'] or 0, 2)
-
-    @property
-    def total_ratings(self):
-        return self.ratings_received.count()
-    
 class BlockedToken(models.Model):
     token = models.CharField(max_length=512)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.token
-    
-class Rating(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='ratings_received',
-    )
-    sender = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='ratings_given',
-    )
-    rate = models.PositiveSmallIntegerField()
-    description = models.TextField(
-        max_length=300,
-        blank=True,
-        null=True,
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'sender')
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"{self.sender.username} rated {self.user.username} - {self.rate}⭐"

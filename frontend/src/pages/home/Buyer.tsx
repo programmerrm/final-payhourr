@@ -1,5 +1,5 @@
 import React from "react";
-import BuyerBg from "../../assets/images/buyer-bg.png";
+import BuyerBg from "../../assets/images/buyer-bg.jpg";
 import BuyerImg from "../../assets/images/buyer.png";
 
 export const Buyer: React.FC = () => {

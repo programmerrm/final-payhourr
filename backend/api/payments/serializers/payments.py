@@ -1,11 +1,6 @@
 from rest_framework import serializers
-from payments.models import PaymentOption, Deposit, Withdraw, Payment, Balance
+from payments.models import Deposit, Withdraw, Payment
 from api.accounts.serializers.users import UserSerializer
-
-class PaymentOptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentOption
-        fields = '__all__'
 
 class DepositSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -32,7 +27,6 @@ class PaymentSerializer(serializers.ModelSerializer):
 class DepositHistorySerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
-    payment_option = PaymentOptionSerializer(read_only=True)
 
     def get_type(self, obj):
         return 'deposit'
@@ -52,9 +46,5 @@ class WithdrawHistorySerializer(serializers.ModelSerializer):
         model = Withdraw
         fields = '__all__'
 
-class BalanceSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Balance
-        fields = '__all__'
+class BalanceSerializer(serializers.Serializer):
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2)
