@@ -6,9 +6,11 @@ autobahn==24.4.2
 Automat==25.4.16
 billiard==4.2.1
 celery==5.5.3
+certifi==2025.8.3
 cffi==1.17.1
 channels==4.3.0
 channels_redis==4.3.0
+charset-normalizer==3.4.2
 click==8.2.1
 click-didyoumean==0.3.1
 click-plugins==1.1.1.2
@@ -54,6 +56,7 @@ python-dotenv==1.1.1
 PyYAML==6.0.2
 redis==6.2.0
 referencing==0.36.2
+requests==2.32.4
 rpds-py==0.26.0
 service-identity==24.2.0
 setuptools==80.9.0
@@ -65,6 +68,7 @@ txaio==25.6.1
 typing_extensions==4.14.1
 tzdata==2025.2
 uritemplate==4.2.0
+urllib3==2.5.0
 vine==5.1.0
 watchfiles==1.1.0
 wcwidth==0.2.13
