@@ -9,7 +9,7 @@ interface ChatAreaProps {
     username: string;
     renderUserAvatar: (user: UserInfo) => React.ReactNode;
     isFileUrl: (text: string) => boolean;
-    bottomRef: React.RefObject<HTMLDivElement | null>;
+    bottomRef: React.RefObject<HTMLDivElement>;
     message: string;
     setMessage: React.Dispatch<React.SetStateAction<string>>;
     handleSend: () => void;
@@ -18,6 +18,7 @@ interface ChatAreaProps {
     selectedFile: File | null;
     roomName: string;
     receiver: string;
+    participantsInfo: UserInfo;
 }
 
 export const ChatArea: React.FC<ChatAreaProps> = ({
@@ -34,10 +35,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
     selectedFile,
     roomName,
     receiver,
+    participantsInfo,
 }) => {
     return (
         <div className="w-full h-full grow p-2.5 md:px-5 md:py-5 flex flex-col space-y-2 md:space-y-4 overflow-scroll scrollbar-hidden">
-            <Profile receiverUsername={receiver} />
+            <Profile receiverUsername={receiver} participantsInfo={participantsInfo} />
             <MessageBox
                 messages={messages}
                 username={username}

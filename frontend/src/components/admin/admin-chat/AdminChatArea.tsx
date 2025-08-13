@@ -9,7 +9,7 @@ interface ChatAreaProps {
     username: string;
     renderUserAvatar: (user: UserInfo) => React.ReactNode;
     isFileUrl: (text: string) => boolean;
-    bottomRef: React.RefObject<HTMLDivElement | null>;
+    bottomRef: React.RefObject<HTMLDivElement>;
     message: string;
     setMessage: React.Dispatch<React.SetStateAction<string>>;
     handleSend: () => void;

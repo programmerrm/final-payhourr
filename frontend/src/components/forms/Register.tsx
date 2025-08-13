@@ -95,7 +95,7 @@ export const RegisterForm:React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-5 py-6 px-2 sm:py-10 sm:px-8 w-full max-w-2xl bg-white rounded-2xl relative mx-auto overflow-y-auto max-h-[90vh] scrollbar-hidden">
+    <div className="flex flex-col gap-y-5 py-6 px-2 sm:py-10 sm:px-8 w-full max-w-2xl shadow bg-white rounded-2xl relative mx-auto overflow-y-auto max-h-[90vh] scrollbar-hidden">
       <button className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black text-white flex justify-center items-center" type="button" onClick={handleCloseForm}>
         <IoCloseSharp className="text-2xl" />
       </button>
@@ -105,13 +105,13 @@ export const RegisterForm:React.FC = () => {
       <h2 className="text-3xl font-bold text-center pb-5">Register Form</h2>
       <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 w-full" onSubmit={handleSubmit(onSubmitForm)}>
         <div className="flex flex-col gap-y-1.5">
-          <Field label="Username" error={errors.username}>
+          <Field label="Username / Domain name" error={errors.username}>
             <input
               {...register("username", { required: "Username is required." })}
               type="text"
               name="username"
               id="username"
-              placeholder="Enter your username"
+              placeholder="username / domain name"
               className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
             />
           </Field>
@@ -129,7 +129,7 @@ export const RegisterForm:React.FC = () => {
           </Field>
         </div>
         <div className="flex flex-col gap-y-1.5">
-          <Field label="First Name" error={errors.first_name}>
+          <Field label="First Name (NID card)" error={errors.first_name}>
             <input
               {...register("first_name", { required: "First name is required." })}
               type="text"
@@ -141,7 +141,7 @@ export const RegisterForm:React.FC = () => {
           </Field>
         </div>
         <div className="flex flex-col gap-y-1.5">
-          <Field label="Last Name" error={errors.last_name}>
+          <Field label="Last Name (NID card)" error={errors.last_name}>
             <input
               {...register("last_name", { required: "Last name is required." })}
               type="text"
@@ -152,26 +152,53 @@ export const RegisterForm:React.FC = () => {
             />
           </Field>
         </div>
+
         <div className="flex flex-col gap-y-1.5">
-          <Field label="Number" error={errors.number}>
+          <Field label="NID card number" error={errors.number}>
+            <input
+              {...register("nid_card_number", { required: "nid card number is required." })}
+              type="text"
+              name="nid_card_number"
+              id="nid_card_number"
+              placeholder="Enter your nid card number"
+              className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
+            />
+          </Field>
+        </div>
+
+        <div className="flex flex-col gap-y-1.5">
+          <Field label="Date of birth (NID card)" error={errors.number}>
+            <input
+              {...register("date_of_birth", { required: "Date of birth is required." })}
+              type="date"
+              name="date_of_birth"
+              id="date_of_birth"
+              placeholder="Enter your date of birth"
+              className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
+            />
+          </Field>
+        </div>
+
+        <div className="flex flex-col gap-y-1.5">
+          <Field label="Phone Number" error={errors.number}>
             <input
               {...register("number", { required: "Number is required." })}
               type="text"
               name="number"
               id="number"
-              placeholder="Enter your number"
+              placeholder="+880 1xxxxxxxxx"
               className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
             />
           </Field>
         </div>
         <div className="flex flex-col gap-y-1">
-          <Field label={"Bkash/Nagad/Rocket"} error={errors.payment_number}>
+          <Field label={"Payment Number"} error={errors.payment_number}>
             <input
               {...register("payment_number", { required: "Payment number is required." })}
               type="text"
               name="payment_number"
               id="payment_number"
-              placeholder="Enter your payment number"
+              placeholder="+880 1xxxxxxxxx"
               className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none"
             />
           </Field>

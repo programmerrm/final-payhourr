@@ -43,20 +43,24 @@ REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
 SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(days=7)
 SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'] = timedelta(days=30)
 
+# ========== CELERY ==========
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://127.0.0.1:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Dhaka'
+
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://127.0.0.1:6379/0')
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
 
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)],
-#         },
-#     },
-# }
+# ========== FRONTEND DOMAIN ==========
+FRONTEND_DOMAIN = env('FRONTEND_DOMAIN', default='http://localhost:3001')
+BACKEND_DOMAIN = env('BACKEND_DOMAIN', default='http://127.0.0.1:8000')
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Payhour Project API',

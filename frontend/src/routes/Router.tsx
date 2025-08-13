@@ -37,6 +37,7 @@ import ConfirmPassword from "../pages/auth/ConfirmPassword";
 import PasswordChangeSuccess from "../pages/auth/PasswordChangeSuccess";
 import Order from "../components/contributor/Order";
 import Settings from "../components/contributor/Settings";
+import PaymentSuccessPage from "../components/contributor/PaymentSuccess";
 
 export const Router = createBrowserRouter([
     {
@@ -211,6 +212,11 @@ export const Router = createBrowserRouter([
                         path: 'dispute/',
                         element: <Dispute />,
                         handle: { title: 'Dispute' },
+                    },
+                    {
+                        path: 'payment-success/:slug',
+                        element: <PaymentSuccessPage />,
+                        handle: { title: 'Payment Success' },
                     },
                     {
                         path: 'payment-history/',

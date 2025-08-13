@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-    
 class FileUploadView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
@@ -47,9 +46,9 @@ class FileUploadView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class ChatList(APIView):
     def get(self, request, room_name, *args, **kwargs):
         messages = Chat.objects.filter(room_name=room_name).order_by("timestamp")
         serializer = ChatSerializer(messages, many=True)
         return Response(serializer.data)
+        

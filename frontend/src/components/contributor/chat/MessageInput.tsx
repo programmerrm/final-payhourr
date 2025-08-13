@@ -22,22 +22,23 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     roomName,
     handleFileChange,
 }) => {
-    const { FaCloudUploadAlt } = ReactIcons;
+    const { FaCloudUploadAlt,IoMdSend } = ReactIcons;
     const role = useSelector((state: RootState) => state.auth.user?.role);
     return (
         <>
             <div className="flex items-center w-full grow">
                 <div className="flex items-center justify-center">
-                    <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition">
+                    <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition relative">
                         <FaCloudUploadAlt className="w-6 h-6 sm:w-7 sm:h-7" />
                         <input
                             type="file"
-                            className="hidden"
+                            className="hidden opacity-0 absolute w-full h-full"
                             onChange={handleFileChange}
                         />
                     </label>
                 </div>
-                <textarea
+                <input 
+                    type="text"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={(e) => {
@@ -50,7 +51,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
                     placeholder="Type a message..."
                     className="flex-1 resize-none border border-gray-300 rounded-2xl px-5 py-2 text-sm appearance-none border-none bg-transparent overflow-y-auto max-h-40 outline-none"
                     style={{ minHeight: "42px" }}
-                ></textarea>
+                />
 
                 <button
                     onClick={handleSend}
@@ -59,9 +60,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
                     className="text-blue-600 hover:text-blue-700 p-2 rounded-full transition"
                     title="Send"
                 >
-                    <svg className="w-6 h-6 rotate-45" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                   <IoMdSend/>
                 </button>
 
                 {selectedFile && (

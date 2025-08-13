@@ -7,6 +7,10 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaCircleUser } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
+import { IoMdSend } from "react-icons/io";
+import { IoMdInformationCircle } from "react-icons/io";
+
+
 
 export const ReactIcons = {
   AiFillEye,
@@ -25,4 +29,6 @@ export const ReactIcons = {
   AiOutlineMenu,
   FaCircleUser,
   AiOutlineClose,
+  IoMdSend,
+  IoMdInformationCircle,
 };

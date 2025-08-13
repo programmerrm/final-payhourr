@@ -13,7 +13,7 @@ export const UserShowDialog: React.FC<UserShowDialogProps> = ({
     userId,
     onClose,
 }) => {
-    const { data: user, isLoading, isError, refetch } = useGetUserQuery(userId);
+    const { data: userData, isLoading, isError, refetch } = useGetUserQuery(userId);
     const [adminUpdateUser, { isLoading: isUpdating }] = useAdminUpdateUserMutation();
 
     const handleVerify = async () => {
@@ -26,7 +26,7 @@ export const UserShowDialog: React.FC<UserShowDialogProps> = ({
         }
     };
 
-    console.log('user : ', user);
+    const user = userData?.data;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4">
@@ -133,6 +133,26 @@ export const UserShowDialog: React.FC<UserShowDialogProps> = ({
                                 disabled={user.is_verify || isUpdating}
                             >
                                 {isUpdating ? "Verifying..." : user.is_verify ? "Already Verified" : "Verify User"}
+                            </button>
+
+                            <button
+                                className={`text-white bg-blue-600 hover:bg-blue-700 py-2.5 px-6 rounded shadow ${user.is_active ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
+                                type="button"
+                                onClick={handleVerify}
+                                disabled={user.is_verify || isUpdating}
+                            >
+                                {isUpdating ? "..." : user.is_verify ? "Already" : " User"}
+                            </button>
+
+                            <button
+                                className={`text-white bg-blue-600 hover:bg-blue-700 py-2.5 px-6 rounded shadow ${user.is_block ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
+                                type="button"
+                                onClick={handleVerify}
+                                disabled={user.is_verify || isUpdating}
+                            >
+                                {isUpdating ? "..." : user.is_verify ? "Already" : " User"}
                             </button>
                         </div>
                     </div>

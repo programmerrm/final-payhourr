@@ -1,43 +1,81 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Field } from "../field/field";
+import { toast } from "react-toastify";
+import { useAddInitPaymentMutation } from "../../redux/features/orders/ordersApi";
+import { useDispatch } from "react-redux";
+import { setOrderData } from "../../redux/features/orders/orderSlice";
+
+interface UserInfo {
+    id: number;
+    username: string;
+    image?: string | null;
+    email: string;
+}
 
 interface FormData {
-    subject: string;
+    title: string;
     amount: string;
-    message: string;
-    file?: FileList;
+    currency: string;
+    requirement: string;
+    delivery_time: string;
+    reference_file?: FileList;
 }
 
 interface CreateOfferFormProps {
     onClose: () => void;
-    receiverUsername: string;
+    participantsInfo: UserInfo;
 }
 
-export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({ onClose, receiverUsername }) => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
-    const [fileName, setFileName] = useState<string>("");
+export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({
+    onClose,
+    participantsInfo,
+}) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormData>();
+    const [fileName, setFileName] = useState("");
+    const dispatch = useDispatch();
+    const receiverId = participantsInfo?.id;
+    const email = participantsInfo?.email;
+    const [addInitPayment] = useAddInitPaymentMutation();
 
     const onSubmitForm = async (data: FormData) => {
         try {
-            console.log("Form Data:", data);
-            reset();
-            setFileName("");
-            onClose();
+            dispatch(
+                setOrderData({
+                    receiver: receiverId.toString(),
+                    title: data.title,
+                    amount: data.amount,
+                    requirement: data.requirement,
+                    delivery_time: data.delivery_time,
+                    reference_file: data.reference_file ? data.reference_file[0] : null,
+                    redirect_url: window.location.href,
+                })
+            );
+
+            const paymentResponse = await addInitPayment({
+                title: data.title,
+                amount: data.amount,
+                currency: data.currency,
+                email: email,
+            }).unwrap();
+
+            if (!paymentResponse.payment_url) {
+                toast.error("Payment initiation failed");
+                return;
+            }
+
+            window.location.href = paymentResponse.payment_url;
+
         } catch (error: any) {
-            console.error(error.message);
+            toast.error(error?.data?.message || "Something went wrong");
         }
     };
 
-    console.log('receiverUsername : ', receiverUsername);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setFileName(e.target.files[0].name);
-        } else {
-            setFileName("");
-        }
-    };
+    console.log('participantsInfo : ', participantsInfo);
 
     return (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
@@ -49,66 +87,87 @@ export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({ onClose, recei
                     aria-label="Close form"
                     type="button"
                 >
-                    <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth="0"
-                        viewBox="0 0 512 512"
-                        className="text-2xl"
-                        height="1em"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path d="M400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49z"></path>
-                    </svg>
+                    ✕
                 </button>
 
-                <h2 className="text-3xl font-bold text-center pb-5 text-[#1F2942]">Create Offer</h2>
+                <h2 className="text-3xl font-bold text-center pb-5 text-[#1F2942]">
+                    Create Offer
+                </h2>
 
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmitForm)}>
+                <form
+                    className="grid grid-cols-2 gap-5"
+                    onSubmit={handleSubmit(onSubmitForm)}
+                >
 
-                    <div className="flex flex-col gap-y-1.5">
-                        <Field label="Subject" error={errors.subject}>
+                    <div className="col-span-2">
+                        <Field label="Main Service Title" error={errors.title}>
                             <input
-                                {...register("subject", { required: "Subject is required" })}
+                                {...register("title", { required: "Title is required" })}
                                 type="text"
-                                id="subject"
-                                className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none w-full"
-                                placeholder="Enter your subject"
+                                id="title"
+                                className="py-2.5 px-5 rounded-full border w-full"
+                                placeholder="Enter service title"
                             />
                         </Field>
                     </div>
 
-                    <div className="flex flex-col gap-y-1.5">
-                        <Field label="Amount (bdt)" error={errors.amount}>
+                    <div>
+                        <Field label="Amount" error={errors.amount}>
                             <input
                                 {...register("amount", { required: "Amount is required" })}
-                                type="text"
+                                type="number"
+                                step="0.01"
                                 id="amount"
-                                className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-full border outline-none w-full"
-                                placeholder="Enter your amount"
+                                className="py-2.5 px-5 rounded-full border w-full"
+                                placeholder="Enter amount"
                             />
                         </Field>
                     </div>
 
-                    <div className="flex flex-col gap-y-1.5">
-                        <Field label="Message" error={errors.message}>
+                    <div>
+                        <Field label="Currency" error={errors.currency}>
+                            <select
+                                {...register("currency", { required: "Currency is required" })}
+                                id="currency"
+                                className="py-2.5 px-5 rounded-full border w-full"
+                            >
+                                <option value="BDT">BDT (৳)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                            </select>
+                        </Field>
+                    </div>
+
+
+                    <div className="col-span-2">
+                        <Field label="Delivery Time" error={errors.delivery_time}>
+                            <input
+                                {...register("delivery_time", { required: "Delivery time is required" })}
+                                type="datetime-local"
+                                id="delivery_time"
+                                className="py-2.5 px-5 rounded-full border w-full"
+                            />
+                        </Field>
+                    </div>
+
+                    <div className="col-span-2">
+                        <Field label="Requirement" error={errors.requirement}>
                             <textarea
-                                {...register("message", { required: "Message is required" })}
-                                id="message"
-                                className="text-base font-medium placeholder:text-base placeholder:font-medium py-2.5 px-5 rounded-lg border outline-none w-full"
-                                placeholder="Enter your message"
+                                {...register("requirement", { required: "Requirement is required" })}
+                                id="requirement"
+                                className="py-2.5 px-5 rounded-lg border w-full"
                                 rows={4}
+                                placeholder="Describe your requirements..."
                             />
                         </Field>
                     </div>
 
-                    <div className="flex flex-col gap-y-1.5">
-                        <Field label="Attach File">
+                    <div className="col-span-full">
+                        <Field label="Upload Reference File (optional)">
                             <>
                                 <label
-                                    htmlFor="file-upload"
-                                    className="block w-full border-2 border-dashed border-gray-400 rounded-md p-4 cursor-pointer hover:border-blue-400 transition relative text-center"
+                                    htmlFor="reference_file"
+                                    className="block border-2 border-dashed p-4 rounded-md cursor-pointer text-center hover:border-blue-400"
                                 >
                                     <div className="flex flex-col items-center justify-center space-y-2 h-40">
                                         <img
@@ -119,25 +178,30 @@ export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({ onClose, recei
                                         <p className="text-sm text-gray-600">
                                             <span className="font-medium text-blue-600">Click to upload</span> or drag & drop
                                         </p>
-                                        <p className="text-xs text-gray-400">SVG, PNG, JPG, or PDF (Max 5MB)</p>
+                                        <p className="text-xs text-gray-400">PNG, JPG, or PDF (Max 50MB)</p>
                                     </div>
-                                    <input
-                                        id="file-upload"
-                                        type="file"
-                                        {...register("file")}
-                                        onChange={handleFileChange}
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    />
                                 </label>
-                                {fileName && <p className="text-xs text-gray-500 mt-1">Selected file: {fileName}</p>}
+                                <input
+                                    id="reference_file"
+                                    type="file"
+                                    {...register("reference_file")}
+                                    onChange={(e) => {
+                                        if (e.target.files?.length) setFileName(e.target.files[0].name);
+                                        else setFileName("");
+                                    }}
+                                    className="hidden"
+                                />
+                                {fileName && (
+                                    <p className="text-xs text-gray-500 mt-1">Selected file: {fileName}</p>
+                                )}
                             </>
                         </Field>
                     </div>
 
-                    <div className="text-right">
+                    <div className="col-span-2">
                         <button
                             type="submit"
-                            className="cursor-pointer text-base font-medium py-3 px-5 text-white bg-[#1F2942] hover:bg-[#ED1B24] transition-all duration-300 ease-linear rounded-full w-full"
+                            className="py-3 px-5 text-white bg-[#1F2942] hover:bg-[#ED1B24] rounded-full w-full"
                         >
                             Submit Offer
                         </button>

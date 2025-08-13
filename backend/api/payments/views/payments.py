@@ -1,9 +1,11 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from payments.models import Payment, Withdraw, Deposit
 from api.payments.serializers.payments import PaymentSerializer, WithdrawSerializer, DepositSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from permissions.admin import IsAdminUser
+from permissions.user import IsSellerOrBuyer
+
 from api.payments.serializers.payments import DepositHistorySerializer, WithdrawHistorySerializer
 from api.payments.paginators.paginators import PaymentHistoryPagination, CombinedTransactionPagination
 from rest_framework.views import APIView
@@ -13,35 +15,11 @@ from api.payments.serializers.payments import BalanceSerializer
 from api.payments.filters.filters import DepositFilter, WithdrawFilter
 from api.payments.paginators.paginators import DepositPagination, WithdrawPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser
 from django.db.models import Q
-
-class IsAdminOrOwner(permissions.BasePermission):
-    """
-    Custom permission:
-    - Admin users can view all.
-    - Non-admin users can only view their own records.
-    """
-
-    def has_permission(self, request, view):
-        # Allow any authenticated user to access the view (list/create)
-        return request.user and request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        # Admins have all permissions
-        if request.user.is_superuser:
-            return True
-        # For objects with 'user' attribute
-        if hasattr(obj, 'user'):
-            return obj.user == request.user
-        # For Payment object, check buyer or seller
-        if isinstance(obj, Payment):
-            return obj.buyer == request.user or obj.seller == request.user
-        return False
 
 class DepositViewSet(viewsets.ModelViewSet):
     serializer_class = DepositSerializer
-    permission_classes = [IsAdminOrOwner]
+    permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_class = DepositFilter
     pagination_class = DepositPagination
@@ -57,7 +35,7 @@ class DepositViewSet(viewsets.ModelViewSet):
 
 class WithdrawViewSet(viewsets.ModelViewSet):
     serializer_class = WithdrawSerializer
-    permission_classes = [IsAdminOrOwner]
+    permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_class = WithdrawFilter
     pagination_class = WithdrawPagination
@@ -72,7 +50,7 @@ class WithdrawViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 class PaymentHistoryView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSellerOrBuyer]
     pagination_class = PaymentHistoryPagination
 
     def get(self, request):
@@ -95,7 +73,7 @@ class PaymentHistoryView(GenericAPIView):
 
 class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
-    permission_classes = [IsAdminOrOwner]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         user = self.request.user
@@ -107,7 +85,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
         serializer.save(buyer=self.request.user)
 
 class TotalDepositAndWithdrawCountView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSellerOrBuyer]
 
     def get(self, request):
         user = request.user
@@ -121,10 +99,10 @@ class TotalDepositAndWithdrawCountView(APIView):
 
 class BalanceView(RetrieveAPIView):
     serializer_class = BalanceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSellerOrBuyer]
 
 class AllTransactionsViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsSellerOrBuyer]
     pagination_class = CombinedTransactionPagination
 
     def list(self, request):
