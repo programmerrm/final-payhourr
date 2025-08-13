@@ -30,7 +30,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://api.payhourr.com',
 ]
 
-SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(min=5)
+SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(minutes=5)
 SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'] = timedelta(days=1)
 
 # ========== CELERY ==========
@@ -46,7 +46,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(env('CELERY_BROKER_URL_HOST', 'redis'), 6379)],
         },
     },
 }
