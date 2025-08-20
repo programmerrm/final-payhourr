@@ -16,8 +16,6 @@ const ordersApi = apiSlice.injectEndpoints({
                 body: formData,
             }),
         }),
-
-
         getReciverOrder: builder.query<any, void>({
             query: () => '/orders/receiver-order/',
         }),

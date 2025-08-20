@@ -27,7 +27,7 @@ class LoginViewSet(APIView):
             }
             return Response({
                 'success': True,
-                'message': 'User logged in successfully.',
+                'message': 'Login successfully.',
                 'data': {
                     'user': user_data,
                     'tokens': token,

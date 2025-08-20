@@ -19,5 +19,3 @@ class CustomJWTAuthentication(JWTAuthentication):
             raise AuthenticationFailed(_('This token has been blacklisted.'))
 
         return user, auth
-
-    

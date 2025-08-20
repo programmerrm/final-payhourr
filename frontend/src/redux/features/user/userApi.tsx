@@ -10,10 +10,17 @@ const userApi = apiSlice.injectEndpoints({
             }),
         }),
         addUpdateUser: builder.mutation({
-            query: ({ id, ...patchData }) => ({
+            query: ({ id, formData }) => ({
                 url: `/accounts/user/update/${id}/`,
                 method: 'PATCH',
-                body: patchData,
+                body: formData,
+            }),
+        }),
+        addPasswordChange: builder.mutation({
+            query: (data) => ({
+                url: '/accounts/user/password/change/',
+                method: 'PATCH',
+                body: data,
             }),
         }),
     }),
@@ -22,4 +29,5 @@ const userApi = apiSlice.injectEndpoints({
 export const {
     useAdminUpdateUserMutation,
     useAddUpdateUserMutation,
+    useAddPasswordChangeMutation,
 } = userApi;

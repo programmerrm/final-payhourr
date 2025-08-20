@@ -4,7 +4,9 @@ import type { RootState } from "../../../redux/store";
 import { CreateOfferForm } from "../../forms/CreateOfferForm";
 import { RatingForm } from "../../forms/RatingForm";
 import { useGetReciverOrderQuery } from "../../../redux/features/orders/ordersApi";
-import type { UserInfo } from "../Chat";
+import { useGetUserQuery } from "../../../redux/features/auth/authApi";
+import { MEDIA_URL } from "../../../utils/Api";
+import type { UserInfo } from "../../../types/chat/ChatProps";
 
 interface ProfileProps {
     receiverUsername: string;
@@ -19,8 +21,8 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername, participants
 
     const { data: reciverOrder } = useGetReciverOrderQuery(undefined, { refetchOnMountOrArgChange: true });
     const auth = useSelector((state: RootState) => state.auth.user);
-
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const { data: user } = useGetUserQuery(Number(auth?.id), { refetchOnMountOrArgChange: true });
 
     // countdown calculation
     useEffect(() => {
@@ -52,34 +54,28 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername, participants
     const openOffer = () => setShowModal((prev) => ({ ...prev, offer: true }));
     const closeOffer = () => setShowModal((prev) => ({ ...prev, offer: false }));
 
-    console.log('reciver order : ', reciverOrder);
+    console.log('timeLeft : ', timeLeft);
 
     return (
         <div className="flex shrink-0 gap-6 sm:flex-row justify-between pl-4 items-center overflow-hidden rounded-full bg-gray-300">
             <div className="flex gap-2 items-center py-3">
                 <div className="size-8 md:size-14 relative ">
                     <div className="absolute w-4 h-4 rounded-full bg-green-500 bottom-0 right-0 z-10 border-2 border-white"></div>
-                    <img src="https://i.pravatar.cc/150?img=8" className="w-full h-full object-cover rounded-full" />
+                    {user?.data?.image ? (
+                        <img src={`${MEDIA_URL}${user?.data?.image}`} className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                        <div className="w-14 h-14 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mx-auto">
+                            {user?.data?.username?.[0]?.toUpperCase() || "?"}
+                        </div>
+                    )}
                 </div>
                 <div>
-                    <h2 className="text-sm md:text-lg leading-none capitalize font-semibold text-gray-800">{auth?.username}</h2>
+                    <h2 className="text-sm md:text-lg leading-none capitalize font-semibold text-gray-800">{user?.data?.username}</h2>
                     <span className="text-xs leading-none">Active</span>
                 </div>
             </div>
 
             <div className="flex flex-row flex-wrap items-center gap-x-5">
-                <div>
-                    <div className="flex items-center gap-2.5">
-                        <div className="p-2 bg-gray-600 rounded-md text-white font-bold text-md">{timeLeft.days}</div>
-                        <div className="text-gray-600 font-bold text-md">:</div>
-                        <div className="p-2 bg-gray-600 rounded-md text-white font-bold text-md">{timeLeft.hours}</div>
-                        <div className="text-gray-600 font-bold text-md">:</div>
-                        <div className="p-2 bg-gray-600 rounded-md text-white font-bold text-md">{timeLeft.minutes}</div>
-                        <div className="text-gray-600 font-bold text-md">:</div>
-                        <div className="p-2 bg-gray-600 rounded-md text-white font-bold text-md">{timeLeft.seconds}</div>
-                    </div>
-                </div>
-
                 <div className="flex flex-col gap-1 md:gap-2">
                     {auth?.role === "seller" ? (
                         <button onClick={openRating} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
@@ -91,8 +87,8 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername, participants
                                 type="button"
                                 disabled={reciverOrder?.data?.status === "pending"}
                                 className={`text-xs md:text-base px-4 pr-5 py-2 md:py-2.5 rounded transition ${reciverOrder?.data?.status === "pending"
-                                    ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-green-600 hover:bg-green-700 text-white"
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-green-600 hover:bg-green-700 text-white"
                                     }`}
                                 onClick={openOffer}
                             >
@@ -102,26 +98,24 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername, participants
                             <button
                                 onClick={openRating}
                                 className="text-xs md:text-base bg-indigo-600 text-white px-4 pr-5 py-2 md:py-2.5 rounded hover:bg-indigo-700 transition"
-                                disabled={
-                                    reciverOrder?.data?.status === "pending" ||
-                                    reciverOrder?.data?.status === "cancel"
-                                }
+                                disabled={reciverOrder?.data?.status === "pending" || reciverOrder?.data?.status === "cancel"}
                             >
                                 Rating Now
                             </button>
-
                         </>
                     )}
                 </div>
             </div>
-            {showModal.offer && <CreateOfferForm
-                onClose={closeOffer}
-                participantsInfo={{
-                    ...participantsInfo,
-                    email: participantsInfo.email || "",
-                }}
-            />
-            }
+
+            {showModal.offer && (
+                <CreateOfferForm
+                    onClose={closeOffer}
+                    participantsInfo={{
+                        ...participantsInfo,
+                        email: participantsInfo.email || "",
+                    }}
+                />
+            )}
             {showModal.rating && <RatingForm onClose={closeRating} receiverUsername={receiverUsername} />}
         </div>
     );

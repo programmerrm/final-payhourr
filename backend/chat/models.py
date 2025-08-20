@@ -30,12 +30,13 @@ class ConnectionRequest(models.Model):
         db_index=True
     )
     accepted = models.BooleanField(
-        default=False, 
-        db_index=True
+        default=False,
+    )
+    is_read = models.BooleanField(
+        default=False
     )
     created_at = models.DateTimeField(
-        auto_now_add=True, 
-        db_index=True
+        auto_now_add=True,
     )
 
     class Meta:
@@ -49,6 +50,7 @@ class ConnectionRequest(models.Model):
             models.Index(fields=["accepted"]),
             models.Index(fields=["created_at"]),
         ]
+        ordering = ["-created_at"]
 
     def clean(self):
         if self.sender == self.receiver:
@@ -73,9 +75,11 @@ class Connected(models.Model):
         blank=True
     )
     created_at = models.DateTimeField(
-        auto_now_add=True, 
-        db_index=True
+        auto_now_add=True
     )
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.user}'s connections"
@@ -159,12 +163,7 @@ class Chat(models.Model):
 # Dispute Model
 # =========================
 class Dispute(models.Model):
-
-    class Priority(models.TextChoices):
-        EASY = "easy", _("Easy")
-        MEDIUM = "medium", _("Medium")
-        HIGH = "high", _("High")
-
+    
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")
         COMPLETED = "completed", _("Completed")
@@ -172,13 +171,13 @@ class Dispute(models.Model):
 
     room_name = models.CharField(
         max_length=255, 
-        db_index=True
+        db_index=True,
     )
     raised_by = models.ForeignKey(
         User,
         related_name="disputes_raised",
         on_delete=models.CASCADE,
-        db_index=True
+        db_index=True,
     )
     against_user = models.ForeignKey(
         User,
@@ -186,7 +185,7 @@ class Dispute(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,
     )
     admin = models.ForeignKey(
         User,
@@ -194,37 +193,45 @@ class Dispute(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,
     )
-    subject = models.CharField(
-        max_length=255
+    title = models.CharField(
+        max_length=1000,
+        db_index=True,
+    )
+    type = models.CharField(
+        max_length=1000,
     )
     description = models.TextField(
-        max_length=5000
+        max_length=5000,
     )
-    priority = models.CharField(
-        max_length=20, 
-        choices=Priority.choices, 
-        db_index=True
+    solution = models.TextField(
+        max_length=5000, 
+        blank=True, 
+        null=True,
+    )
+    attach_proof = models.FileField(
+        upload_to="dispute_proofs/",
+        blank=True,
+        null=True,
     )
     status = models.CharField(
-        max_length=20, 
-        choices=Status.choices, 
-        default=Status.PENDING, 
-        db_index=True
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+        db_index=True,
     )
     created_at = models.DateTimeField(
         auto_now_add=True, 
-        db_index=True
+        db_index=True,
     )
 
     class Meta:
         indexes = [
-            models.Index(fields=["priority"]),
             models.Index(fields=["status"]),
             models.Index(fields=["created_at"]),
         ]
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Dispute: {self.subject} ({self.priority})"
+        return f"Dispute: {self.title} ({self.status})"

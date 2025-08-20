@@ -1,5 +1,7 @@
-import React from "react";
-import type { ChatMessage, UserInfo } from "../Chat";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { ChatMessage, UserInfo } from "../../../types/chat/ChatProps";
+import { ReactIcons } from "../../../utils/ReactIcons";
 
 interface MessageBoxProps {
     messages: ChatMessage[];
@@ -16,43 +18,58 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
     isFileUrl,
     bottomRef,
 }) => {
+    const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+    const closeMedia = () => setSelectedMedia(null);
+    const { IoMdClose } = ReactIcons;
     return (
-        <div className="flex-grow overflow-y-auto scrollbar-hidden bg-white p-2 md:p-4 rounded-lg mb-4 space-y-2 md:space-y-6">
+        <div className="flex-grow overflow-y-auto scrollbar-hidden bg-white p-2 md:p-4 rounded-lg mb-4 space-y-2 md:space-y-6 relative">
             {messages.length === 0 ? (
-                <li className="text-center text-gray-500">No messages yet</li>
+                <div className="flex flex-col items-center justify-center text-center mt-28 text-gray-500 space-y-4">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/2910/2910769.png"
+                        alt="Chat Illustration"
+                        className="w-32 h-32 opacity-70"
+                    />
+                    <h2 className="text-xl font-semibold text-gray-700">
+                        Welcome to PayHourr Live Chat!
+                    </h2>
+                    <p className="text-gray-500 max-w-xs">
+                        Start a conversation by sending a message.
+                    </p>
+                </div>
             ) : (
                 messages.map((msg) => {
                     const isOwnMessage = msg.sender.username === username;
                     const isImage = msg.message.match(/\.(jpg|jpeg|png|gif)$/i);
                     const isVideo = msg.message.match(/\.(mp4)$/i);
                     const isPdf = msg.message.match(/\.(pdf)$/i);
-                    const isOtherFile = isFileUrl(msg.message) && !isImage && !isVideo && !isPdf;
-
+                    const isOtherFile =
+                        isFileUrl(msg.message) && !isImage && !isVideo && !isPdf;
                     return (
                         <div
                             key={msg.id}
-                            className={`flex items-end ${isOwnMessage ? "justify-end ml-auto" : "justify-start"} gap-1 md:gap-3 max-w-lg`}
+                            className={`flex items-end ${isOwnMessage ? "justify-end ml-auto" : "justify-start"
+                                } gap-1 md:gap-3 max-w-lg`}
                         >
                             {!isOwnMessage && renderUserAvatar(msg.sender)}
-
-                            {/** Message Content */}
                             <div
-                                className={`${
-                                    isOwnMessage
-                                        ? "items-end"
-                                        : "items-start"
-                                } flex flex-col gap-1`}
+                                className={`${isOwnMessage ? "items-end" : "items-start"
+                                    } flex flex-col gap-1`}
                             >
                                 {isImage && (
-                                    <div className="rounded-2xl shadow max-w-xs overflow-hidden">
+                                    <motion.div
+                                        whileHover={{ scale: 1.05, }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                        className="rounded-2xl shadow max-w-xs overflow-hidden cursor-pointer"
+                                        onClick={() => setSelectedMedia(msg.message)}
+                                    >
                                         <img
                                             src={msg.message}
                                             alt="Image"
                                             className="w-full h-auto rounded-2xl"
                                         />
-                                    </div>
+                                    </motion.div>
                                 )}
-
                                 {isVideo && (
                                     <div className="rounded-2xl shadow max-w-xs overflow-hidden">
                                         <video controls className="w-full rounded-2xl">
@@ -60,14 +77,12 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                         </video>
                                     </div>
                                 )}
-
                                 {isPdf && (
                                     <div
-                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${
-                                            isOwnMessage
+                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
                                                 ? "bg-blue-600 text-white rounded-br-none"
                                                 : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
-                                        }`}
+                                            }`}
                                     >
                                         <p className="mb-2 font-medium">Here’s the PDF:</p>
                                         <a
@@ -80,14 +95,12 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                         </a>
                                     </div>
                                 )}
-
                                 {isOtherFile && (
                                     <div
-                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${
-                                            isOwnMessage
+                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
                                                 ? "bg-blue-600 text-white rounded-br-none"
                                                 : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
-                                        }`}
+                                            }`}
                                     >
                                         <p className="mb-2 font-medium">Attached file:</p>
                                         <a
@@ -100,28 +113,50 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                         </a>
                                     </div>
                                 )}
-
                                 {!isFileUrl(msg.message) && (
                                     <div
-                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${
-                                            isOwnMessage
+                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
                                                 ? "bg-blue-600 text-white rounded-br-none"
                                                 : "bg-gray-200 text-gray-900 rounded-bl-none"
-                                        }`}
+                                            }`}
                                     >
                                         {msg.message}
                                     </div>
                                 )}
                             </div>
-
                             {isOwnMessage && renderUserAvatar(msg.sender)}
                         </div>
                     );
                 })
             )}
-
-            {/* Scroll to Bottom Ref */}
             <div ref={bottomRef} />
+            <AnimatePresence>
+                {selectedMedia && (
+                    <motion.div
+                        className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={closeMedia}
+                    >
+                        <motion.img
+                            src={selectedMedia}
+                            alt="Expanded"
+                            className="max-h-[90%] max-w-[90%] rounded-xl shadow-lg cursor-pointer"
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.8 }}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                            onClick={closeMedia}
+                            className="flex justify-center items-center absolute top-5 right-5 text-white bg-gray-800 rounded-full w-14 h-14 p-2 hover:bg-gray-700 transition"
+                        >
+                            <IoMdClose className="text-3xl" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
-};
+}

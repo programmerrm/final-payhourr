@@ -13,7 +13,7 @@ import WorkCompletedPendingApprovals from "../components/admin/WorkCompletedPend
 import WithdrawRequests from "../components/admin/WithdrawRequests";
 import ManualPaymentReleaseOption from "../components/admin/ManualPaymentReleaseOption";
 import DisputeManagment from "../components/admin/DisputeManagment";
-import Chat from "../components/contributor/Chat";
+import Chat from "../components/contributor/chat/Chat";
 import MyWallet from "../components/contributor/MyWallet";
 import Dispute from "../components/contributor/Dispute";
 import PaymentHistory from "../components/contributor/PaymentHistory";

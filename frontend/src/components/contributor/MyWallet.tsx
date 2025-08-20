@@ -1,98 +1,88 @@
 import { useState } from "react";
-import { DepositeForm } from "../forms/DepositeForm";
-import { WithdrawForm } from "../forms/WithdrawForm";
-import { useGetBalanceQuery, useGetPaymentHistoryQuery, useGetPaymnetCountsQuery } from "../../redux/features/payments/paymentsApi";
+import { useGetPaymentHistoryQuery } from "../../redux/features/payments/paymentsApi";
 import { Pagination } from "../pagination/Pagination";
+import { ReactIcons } from "../../utils/ReactIcons";
 
 export default function MyWallet() {
-    const [showDepositModal, setShowDepositModal] = useState(false);
-    const [showWithdrawModal, setShowWithdrawModal] = useState(false);
     const [page, setPage] = useState<number>(1);
-    const { data: balance } = useGetBalanceQuery(undefined, { refetchOnMountOrArgChange: true });
-    const { data: paymentCounts } = useGetPaymnetCountsQuery(undefined, { refetchOnMountOrArgChange: true });
     const { data: paymentHistory } = useGetPaymentHistoryQuery({ page }, { refetchOnMountOrArgChange: true });
-
-    const handleDepositeAmount = () => setShowDepositModal(true);
-    const handleWithdrawAmount = () => setShowWithdrawModal(true);
-
-    const closeModal = () => {
-        setShowDepositModal(false);
-        setShowWithdrawModal(false);
-    };
-
     const currentPage = page;
     const totalPages = paymentHistory?.pagination?.total_pages || 1;
 
+    const { MdOutlinePayment } = ReactIcons;
+
     return (
         <div className=" space-y-5">
-            <div className="tab-content flex-grow overflow-auto flex flex-col lg:flex-row gap-6">
+            <div className="bg-white p-2.5 space-y-2.5">
+                <div className="bg-[#C9CCD3] text-center p-2">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1E2841]">My Wallet</h2>
+                </div>
+                <div className="border border-[#656565] rounded-2xl p-4 pb-0 space-y-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4 items-start">
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
+                            <div className="bg-[#1E2841] py-2.5 px-1 text-center">
+                                <h3 className="text-white text-lg sm:text-xl font-bold">Available Balance</h3>
+                            </div>
+                            <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">1300/-</p>
+                            </div>
+                        </div>
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
+                            <div className="bg-[#1E2841] py-2.5 px-1 text-center">
+                                <h3 className="text-white text-lg sm:text-xl font-bold">On Hold</h3>
+                            </div>
+                            <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">500/-</p>
+                            </div>
+                        </div>
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
+                            <div className="bg-[#1E2841] py-2.5 px-1 text-center">
+                                <h3 className="text-white text-lg sm:text-xl font-bold">Withdrawn Total</h3>
+                            </div>
+                            <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">8500/-</p>
+                            </div>
+                        </div>
 
-                <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 content-start">
-                    {/* Balance cards */}
-                    <div className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 flex items-center justify-center flex-col">
-                        <h2 className="text-base lg:text-xl font-semibold text-gray-800">Available Balance</h2>
-                        <p className="mt-2 text-base lg:text-3xl font-extrabold text-blue-600">{balance?.amount}</p>
-                    </div>
-                    <div className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 flex items-center justify-center flex-col">
-                        <h2 className="text-base lg:text-xl font-semibold text-gray-800">Withdraw Total</h2>
-                        <p className="mt-2 text-base lg:text-3xl font-extrabold text-yellow-600">{paymentCounts?.withdraw_count}</p>
-                    </div>
+                        
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
+                            <div className="bg-[#1E2841] py-2.5 px-1 text-center">
+                                <h3 className="text-white text-lg sm:text-xl font-bold">Total Deposited</h3>
+                            </div>
+                            <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">9000/-</p>
+                            </div>
+                        </div>
 
-                    <div className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 flex items-center justify-center flex-col">
-                        <h2 className="text-base lg:text-xl font-semibold text-gray-800">Total Deposited</h2>
-                        <p className="mt-2 text-base lg:text-3xl font-extrabold text-indigo-600">{paymentCounts?.deposit_count}</p>
-                    </div>
-
-                    <div
-                        className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center"
-                        onClick={handleDepositeAmount}
-                    >
-                        <button type="button" className="min-h-12 text-base lg:text-xl font-semibold text-gray-800">
-                            Deposit Now
-                        </button>
-                    </div>
-                    <div
-                        className="bg-white p-2.5 md:p-3 lg:p-6 border border-gray-300 rounded-2xl shadow-md text-center hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center"
-                        onClick={handleWithdrawAmount}
-                    >
-                        <button type="button" className="min-h-12 text-base lg:text-xl font-semibold text-gray-800">
-                            Withdraw Now
-                        </button>
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2 lg:col-span-full">
+                            <div className="bg-[#1E2841] py-2.5 px-1 text-center">
+                                <h3 className="text-white text-lg sm:text-xl font-bold">
+                                    Withdraw Funds
+                                </h3>
+                            </div>
+                            <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex flex-col gap-4 items-center justify-center">
+                                <div className="flex flex-wrap items-center justify-center gap-2">
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Bkash-logo.jpg" alt="bkash logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Nagad-Logo.wine.svg" alt="nogod logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Rocket_mobile_banking_logo.svg.png" alt="rocket logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./islaamii-bank-bangla-20240529135428.jpg" alt="islaamii logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./hnxLWUrwLR5cbqw6JaWG_22_6c1af0b6b5d0f78bfbaf9aeb652a959b_jvectors.webp" alt="dbbl logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./51056-city-bank-thumb.jpg" alt="city logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Bkash-logo.jpg" alt="bkash logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Nagad-Logo.wine.svg" alt="nogod logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Rocket_mobile_banking_logo.svg.png" alt="rocket logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./islaamii-bank-bangla-20240529135428.jpg" alt="islaamii logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./hnxLWUrwLR5cbqw6JaWG_22_6c1af0b6b5d0f78bfbaf9aeb652a959b_jvectors.webp" alt="dbbl logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./51056-city-bank-thumb.jpg" alt="city logo" />
+                                </div>
+                                <button className="flex flex-row flex-wrap items-center justify-center gap-x-2.5 text-white text-base sm:text-lg md:text-xl font-semibold py-2 px-4 min-w-[182px] rounded-2xl bg-[#1E2841]">
+                                    <MdOutlinePayment className="text-white text-2xl" />
+                                    Withdraw
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                {/* Deposit Modal */}
-                {showDepositModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-                            <button
-                                onClick={closeModal}
-                                className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl font-bold"
-                            >
-                                ×
-                            </button>
-                            <h2 className="text-2xl font-semibold mb-4">Deposit Money</h2>
-                            <DepositeForm onSuccess={closeModal} />
-                        </div>
-                    </div>
-                )}
-
-                {/* Withdraw Modal */}
-                {showWithdrawModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-                            <button
-                                onClick={closeModal}
-                                className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl font-bold"
-                            >
-                                ×
-                            </button>
-                            <h2 className="text-2xl font-semibold mb-4">Withdraw Money</h2>
-                            <WithdrawForm onSuccess={closeModal} />
-                        </div>
-                    </div>
-                )}
-
             </div>
 
             <div>

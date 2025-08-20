@@ -18,15 +18,9 @@ class Deposit(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    sender_number = models.CharField(max_length=255)
-    receiver_number = models.CharField(max_length=255)
-    txr_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    transaction_id = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        if not self.user.payments_made.exists():
-            raise ValidationError("Only buyers can make deposits.")
 
     def save(self, *args, **kwargs):
         with transaction.atomic():
@@ -52,61 +46,6 @@ class Deposit(models.Model):
 
     def __str__(self):
         return f"Deposit by {self.user.username}: {self.amount} ({self.status})"
-
-
-class Withdraw(models.Model):
-    STATUS_PENDING = 'pending'
-    STATUS_APPROVED = 'approved'
-    STATUS_REJECTED = 'rejected'
-
-    STATUS_CHOICES = (
-        (STATUS_PENDING, 'Pending'),
-        (STATUS_APPROVED, 'Approved'),
-        (STATUS_REJECTED, 'Rejected'),
-    )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    receiver_number = models.CharField(max_length=255)
-    method = models.CharField(max_length=255)
-    txr_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        is_buyer = self.user.payments_made.exists()
-        is_seller = self.user.payments_received.exists()
-        if not (is_buyer or is_seller):
-            raise ValidationError("Only buyers or sellers can make withdrawals.")
-
-        # Use database value of balance to avoid stale value issue
-        self.user.refresh_from_db(fields=['balance'])
-        if self.amount > self.user.balance:
-            raise ValidationError(f"Insufficient balance. Your balance is {self.user.balance}")
-
-    def save(self, *args, **kwargs):
-        with transaction.atomic():
-            if self.pk:
-                old = Withdraw.objects.select_for_update().get(pk=self.pk)
-                if old.status != self.status:
-                    if old.status != self.STATUS_APPROVED and self.status == self.STATUS_APPROVED:
-                        # Withdraw approved now - decrease balance
-                        self.user.balance = models.F('balance') - self.amount
-                        self.user.save(update_fields=['balance'])
-                    elif old.status == self.STATUS_APPROVED and self.status != self.STATUS_APPROVED:
-                        # Withdraw was approved before, now unapproved - increase balance
-                        self.user.balance = models.F('balance') + self.amount
-                        self.user.save(update_fields=['balance'])
-            else:
-                if self.status == self.STATUS_APPROVED:
-                    self.user.balance = models.F('balance') - self.amount
-                    self.user.save(update_fields=['balance'])
-
-            super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Withdraw by {self.user.username}: {self.amount} ({self.status})"
-
 
 class Payment(models.Model):
     STATUS_PENDING = 'pending'
@@ -168,3 +107,57 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment from {self.buyer.username} to {self.seller.username} - {self.amount} ({self.status})"
+
+
+class Withdraw(models.Model):
+    STATUS_PENDING = 'pending'
+    STATUS_APPROVED = 'approved'
+    STATUS_REJECTED = 'rejected'
+
+    STATUS_CHOICES = (
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_APPROVED, 'Approved'),
+        (STATUS_REJECTED, 'Rejected'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    receiver_number = models.CharField(max_length=255)
+    method = models.CharField(max_length=255)
+    txr_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        is_buyer = self.user.payments_made.exists()
+        is_seller = self.user.payments_received.exists()
+        if not (is_buyer or is_seller):
+            raise ValidationError("Only buyers or sellers can make withdrawals.")
+
+        # Use database value of balance to avoid stale value issue
+        self.user.refresh_from_db(fields=['balance'])
+        if self.amount > self.user.balance:
+            raise ValidationError(f"Insufficient balance. Your balance is {self.user.balance}")
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.pk:
+                old = Withdraw.objects.select_for_update().get(pk=self.pk)
+                if old.status != self.status:
+                    if old.status != self.STATUS_APPROVED and self.status == self.STATUS_APPROVED:
+                        # Withdraw approved now - decrease balance
+                        self.user.balance = models.F('balance') - self.amount
+                        self.user.save(update_fields=['balance'])
+                    elif old.status == self.STATUS_APPROVED and self.status != self.STATUS_APPROVED:
+                        # Withdraw was approved before, now unapproved - increase balance
+                        self.user.balance = models.F('balance') + self.amount
+                        self.user.save(update_fields=['balance'])
+            else:
+                if self.status == self.STATUS_APPROVED:
+                    self.user.balance = models.F('balance') - self.amount
+                    self.user.save(update_fields=['balance'])
+
+            super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Withdraw by {self.user.username}: {self.amount} ({self.status})"

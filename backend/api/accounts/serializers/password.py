@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class PasswordChangeSerializer(serializers.Serializer):
-    cold_password = serializers.CharField(write_only=True)
+    old_password = serializers.CharField(write_only=True)
     new_password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
 

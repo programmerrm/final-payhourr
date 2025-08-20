@@ -1,16 +1,20 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Pagination } from "../pagination/Pagination";
-import { 
-    useAddConnectionRequestDeleteMutation, 
-    useGetConnectionRequesQuery, 
-    useAddConnectionRequestUserListMutation 
+import {
+    useAddConnectionRequestDeleteMutation,
+    useGetConnectionRequesQuery,
+    useAddConnectionRequestUserListMutation
 } from "../../redux/features/chat/connectionRequests";
+import { MEDIA_URL } from "../../utils/Api";
+import { toast } from "react-toastify";
 
 type User = {
     id: number;
     user_id: string;
     username: string;
     email: string;
+    image: string;
     number: string;
     role: string;
     date_joined: string;
@@ -23,11 +27,14 @@ type TransformedUser = {
 };
 
 export default function IncomingConnectionRequests() {
+    const location = useLocation();
+    const state = location.state as { search?: string };
+
     const [search, setSearch] = useState<string>("");
     const [page, setPage] = useState<number>(1);
 
     const { data, refetch } = useGetConnectionRequesQuery(
-        { search, page },
+        { search: search || state?.search || "", page },
         { refetchOnMountOrArgChange: true }
     );
 
@@ -49,23 +56,39 @@ export default function IncomingConnectionRequests() {
     const currentPage = page;
     const totalPages = data?.pagination?.total_pages || 1;
 
-    // Delete connection request handler
     const handleDelete = async (userId: string) => {
         try {
             await addConnectionRequestDelete({ user_id: userId }).unwrap();
             refetch();
-        } catch (err) {
-            console.error("Failed to delete connection request:", err);
+            toast.success("Connection request successfully deleted!");
+        } catch (error: any) {
+            const errorData = error?.data;
+            const errors = errorData?.errors;
+            if (errors && typeof errors === 'object') {
+                const firstKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstKey]?.[0];
+                toast.error(firstErrorMessage);
+            } else {
+                toast.error('No structured errors found.');
+            }
         }
     };
 
-    // Add connection handler (accept connection)
     const handleAdd = async (userId: string) => {
         try {
             await addConnectionRequestUserList({ user_id: userId }).unwrap();
             refetch();
-        } catch (err) {
-            console.error("Failed to add connection:", err);
+            toast.success("Connection request successfully sent!");
+        } catch (error: any) {
+            const errorData = error?.data;
+            const errors = errorData?.errors;
+            if (errors && typeof errors === 'object') {
+                const firstKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstKey]?.[0];
+                toast.error(firstErrorMessage);
+            } else {
+                toast.error('No structured errors found.');
+            }
         }
     };
 
@@ -90,7 +113,7 @@ export default function IncomingConnectionRequests() {
                 <table className="min-w-full text-sm text-center">
                     <thead className="bg-[#1C2640] text-white text-xs uppercase sticky top-0 z-10">
                         <tr>
-                            <th className="px-6 py-4">Account Created</th>
+                            <th className="px-6 py-4">Photo</th>
                             <th className="px-6 py-4">User ID</th>
                             <th className="px-6 py-4">Username</th>
                             <th className="px-6 py-4">Email</th>
@@ -108,25 +131,37 @@ export default function IncomingConnectionRequests() {
                                 </td>
                             </tr>
                         ) : (
-                            senders.map(({ id, user, created_at }) => (
+                            senders.map(({ id, user }) => (
                                 <tr key={`${id}-${user.id}`} className="hover:bg-gray-100 transition">
-                                    <td className="px-6 py-4">{new Date(created_at).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4">
+                                        {user.image ? (
+                                            <img
+                                                src={`${MEDIA_URL}${user.image}`}
+                                                alt={user.username}
+                                                className="w-8 h-8 rounded-full mx-auto"
+                                            />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mx-auto">
+                                                {user?.username?.[0]?.toUpperCase() || "?"}
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4 font-medium text-gray-900">{user.user_id}</td>
                                     <td className="px-6 py-4">@{user.username}</td>
                                     <td className="px-6 py-4">{user.email}</td>
                                     <td className="px-6 py-4">{user.number}</td>
                                     <td className="px-6 py-4 font-bold text-blue-600">{user.role}</td>
                                     <td className="px-6 py-4">
-                                        <button 
-                                            onClick={() => handleAdd(user.user_id)} 
+                                        <button
+                                            onClick={() => handleAdd(user.user_id)}
                                             className="text-blue-600 hover:underline"
                                         >
                                             Add
                                         </button>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <button 
-                                            onClick={() => handleDelete(user.user_id)} 
+                                        <button
+                                            onClick={() => handleDelete(user.user_id)}
                                             className="text-red-600 hover:underline"
                                         >
                                             Delete

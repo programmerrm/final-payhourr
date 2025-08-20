@@ -1,8 +1,8 @@
 import React from "react";
-import type { ChatMessage, UserInfo } from "../Chat";
 import { MessageBox } from "./MessageBox";
 import { MessageInput } from "./MessageInput";
 import { Profile } from "./Profile";
+import type { ChatMessage, UserInfo } from "../../../types/chat/ChatProps";
 
 interface ChatAreaProps {
     messages: ChatMessage[];

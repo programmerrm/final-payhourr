@@ -39,7 +39,7 @@ class User(AbstractUser):
         help_text=_("Profile picture"),
     )
     username = models.CharField(
-        max_length=30,
+        max_length=280,
         unique=True,
         db_index=True,
         validators=[
@@ -52,37 +52,16 @@ class User(AbstractUser):
         help_text=_("Unique username"),
     )
     slug = models.SlugField(
-        max_length=40,
+        max_length=280,
         unique=True,
         editable=False,
     )
     email = models.EmailField(
-        max_length=60,
+        max_length=180,
         unique=True,
         db_index=True,
         validators=[EmailValidator(), MinLengthValidator(10)],
         help_text=_("Unique email address"),
-    )
-    number = models.CharField(
-        max_length=20,
-        unique=True,
-        db_index=True,
-        help_text=_("Phone number"),
-    )
-    payment_number = models.CharField(
-        max_length=20,
-        unique=True,
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text=_("Payment number (optional)"),
-    )
-    balance = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        default=Decimal('0.00'),
-        validators=[MinValueValidator(0)],
-        help_text=_("User account balance"),
     )
     first_name = models.CharField(
         max_length=30,
@@ -98,7 +77,22 @@ class User(AbstractUser):
         max_length=20,
         null=True,
         blank=True,
-        help_text=_("National ID card number"),
+    )
+    number = models.CharField(
+        max_length=20,
+        unique=True,
+        db_index=True,
+        null=True,
+        blank=True,
+        help_text=_("Phone number"),
+    )
+    payment_number = models.CharField(
+        max_length=20,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Payment number (optional)"),
     )
     nid_front_side = models.ImageField(
         upload_to=NID_DIRECTORY_PATH,
@@ -114,11 +108,17 @@ class User(AbstractUser):
         blank=True,
         help_text=_("NID back side image"),
     )
-    
     date_of_birth = models.DateField(
         null=True,
         blank=True,
         help_text=_("Date of birth"),
+    )
+    balance = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        validators=[MinValueValidator(0)],
+        help_text=_("User account balance"),
     )
 
     gender = models.CharField(
@@ -129,7 +129,7 @@ class User(AbstractUser):
         help_text=_("Gender"),
     )
     address = models.CharField(
-        max_length=80,
+        max_length=280,
         validators=[MinLengthValidator(10)],
         null=True,
         blank=True,
@@ -165,7 +165,7 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'number']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     objects = UserManager()
 

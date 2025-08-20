@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from chat.models import Dispute
@@ -30,25 +31,35 @@ class DisputeViewSet(viewsets.ModelViewSet):
         room_name = serializer.validated_data.get("room_name")
 
         against_user = None
-
         if room_name:
             user_parts = room_name.split("_")
-
             for part in user_parts:
-                # Skip if part matches the current user
                 if part == str(raised_by_user.id) or part == raised_by_user.username:
                     continue
-
-                # Try to resolve by ID
                 if part.isdigit():
                     against_user = User.objects.filter(id=int(part)).first()
                 else:
-                    # Try to resolve by username
                     against_user = User.objects.filter(username=part).first()
-
                 if against_user:
-                    break  # found the opponent
+                    break
 
+        # ===========================
+        # Prevent duplicate pending Dispute
+        # ===========================
+        if against_user:
+            existing_dispute = Dispute.objects.filter(
+                Q(raised_by=raised_by_user, against_user=against_user) |
+                Q(raised_by=against_user, against_user=raised_by_user),
+                status=Dispute.Status.PENDING
+            ).first()
+
+            if existing_dispute:
+                raise ValidationError({
+                    'success': False,
+                    'errors': 'You already have a pending dispute with this user. Please resolve it first.',
+                })
+
+        # Assign first available admin automatically
         admin_user = User.objects.filter(Q(role='admin') | Q(is_superuser=True)).first()
 
         serializer.save(
@@ -57,16 +68,14 @@ class DisputeViewSet(viewsets.ModelViewSet):
             against_user=against_user
         )
 
-
-
     def update(self, request, *args, **kwargs):
         user = request.user
         instance = self.get_object()
 
         if 'status' in request.data and not (user.role == 'admin' or user.is_superuser):
-            return Response(
-                {"detail": "Only admin can update the status."},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
+            return Response({
+                "success": False,
+                "errors": "Only admin can update the status."
+            }, status=status.HTTP_403_FORBIDDEN)
+
         return super().update(request, *args, **kwargs)

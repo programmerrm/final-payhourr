@@ -15,4 +15,3 @@ class UsersFilter(django_filters.FilterSet):
         return queryset.filter(
             Q(username__icontains=value) | Q(email__icontains=value)
         )
-

@@ -8,11 +8,10 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, number, first_name, last_name, password=None, **extra_fields):
+    def create_user(self, username, email, first_name, last_name, password=None, **extra_fields):
         required_fields = {
             'username': username,
             'email': email,
-            'number': number,
             'first_name': first_name,
             'last_name': last_name,
         }
@@ -25,7 +24,6 @@ class UserManager(BaseUserManager):
         user = self.model(
             username=username,
             email=email,
-            number=number,
             first_name=first_name,
             last_name=last_name,
             **extra_fields,
@@ -34,7 +32,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, username, email, number, first_name, last_name, password, **extra_fields):
+    def create_superuser(self, username, email, first_name, last_name, password, **extra_fields):
         extra_fields.setdefault('role', 'admin')
         extra_fields.setdefault('terms_accept', True)
         extra_fields.setdefault('is_verify', True)
@@ -44,7 +42,6 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             username,
             email,
-            number,
             first_name,
             last_name,
             password,

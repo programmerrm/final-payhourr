@@ -4,7 +4,7 @@ from rest_framework.response import Response
 class ConnectionRequestsPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data, senders, receivers):
@@ -27,7 +27,7 @@ class ConnectionRequestsPagination(PageNumberPagination):
 class ConnectedUserPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):
@@ -47,7 +47,7 @@ class ConnectedUserPagination(PageNumberPagination):
 class DisputePagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):

@@ -52,7 +52,6 @@ export const MessageInput: React.FC<MessageInputProps> = ({
                     className="flex-1 resize-none border border-gray-300 rounded-2xl px-5 py-2 text-sm appearance-none border-none bg-transparent overflow-y-auto max-h-40 outline-none"
                     style={{ minHeight: "42px" }}
                 />
-
                 <button
                     onClick={handleSend}
                     disabled={!message.trim() || !!selectedFile}
@@ -60,7 +59,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
                     className="text-blue-600 hover:text-blue-700 p-2 rounded-full transition"
                     title="Send"
                 >
-                   <IoMdSend/>
+                   <IoMdSend className="text-2xl" />
                 </button>
 
                 {selectedFile && (

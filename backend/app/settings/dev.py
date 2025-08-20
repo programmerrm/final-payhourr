@@ -6,7 +6,7 @@ Development settings configuration
 from app.settings.base import *
 from datetime import timedelta
 
-DEBUG =True
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 SECRET_KEY = 'django-insecure-ie75-++_k&c+)2$#)5hl*g^kwy$5mjj+%318%%wfe3!(yb#3i#'
 

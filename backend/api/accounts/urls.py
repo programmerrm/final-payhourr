@@ -3,8 +3,7 @@ from api.accounts.views.register import RegisterViewSet
 from api.accounts.views.login import LoginViewSet
 from api.accounts.views.logout import LogoutView
 from api.accounts.views.users import UsersViewSet, UserViewSet
-from api.accounts.views.update import AdminUpdateUserViewSet
-from api.accounts.views.update import UpdateUserViewSet
+from api.accounts.views.update import AdminUpdateUserViewSet, UpdateUserViewSet
 from api.accounts.views.delete import AdminAllUserDeleteViewSet
 from api.accounts.views.delete import AdminUsersDeleteViewSet
 from api.accounts.views.delete import UserDeleteViewSet

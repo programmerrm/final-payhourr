@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     
     'accounts',
     'configuration',
+    'notifications',
     'chat',
     'orders',
     'payments',
@@ -140,6 +141,9 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "id",
 }
+
+# =========== REDIS_URL ===================
+REDIS_URL = env('REDIS_URL')
 
 # ========== CELERY BEAT SCHEDULE ==========
 CELERY_BEAT_SCHEDULE = {

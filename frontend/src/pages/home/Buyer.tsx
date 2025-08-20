@@ -1,8 +1,35 @@
 import React from "react";
 import BuyerBg from "../../assets/images/buyer-bg.jpg";
 import BuyerImg from "../../assets/images/buyer.png";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { toggleAuthForm, toggleForm } from "../../redux/features/status/statusSlice";
 
 export const Buyer: React.FC = () => {
+  const auth = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    dispatch(toggleAuthForm());
+    dispatch(toggleForm("login"));
+  };
+
+  const handleRoleClick = (role: "buyer" | "seller") => {
+    if (!auth) {
+      handleLoginClick();
+      return;
+    }
+
+    if (auth.role === role) {
+      navigate(`/dashboard/${auth.username}/`);
+    } else {
+      toast.warning(`Your role is ${auth.role}, you cannot access ${role}.`);
+    }
+  };
+
   return (
     <section className="bg-no-repeat bg-right-top bg-cover lg:bg-center py-8 lg:py-10 flex items-center" style={{ backgroundImage: `url(${BuyerBg})` }}>
       <div className="max-w-screen-2xl container mx-auto px-2.5 lg:px-5 flex items-center gap-5 flex-col-reverse lg:flex-row">
@@ -11,7 +38,7 @@ export const Buyer: React.FC = () => {
           <p className="text-sm md:text-base font-semibold text-[#001429]">
             Securely order the products or services you need. Payhourr holds payments in advance so that every transaction is worry-free.
           </p>
-          <button className="inline-block py-2.5 px-4 rounded text-white text-sm md:text-base font-medium bg-[#ED1B24] transition-all ease-linear duration-300 hover:bg-[#1F2942]" type="button">
+          <button className="inline-block py-2.5 px-4 rounded text-white text-sm md:text-base font-medium bg-[#ED1B24] transition-all ease-linear duration-300 hover:bg-[#1F2942]" type="button" onClick={() => handleRoleClick("buyer")}>
             Become a Buyer
           </button>
         </div>

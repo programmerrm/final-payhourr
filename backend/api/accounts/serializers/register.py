@@ -14,8 +14,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'username', 'email', 'number', 'payment_number', 'first_name', 'last_name',
-            'nid_front_side', 'nid_back_side', 'password', 'confirm_password',
+            'username', 'email', 'first_name', 'last_name', 'nid_card_number', 'date_of_birth', 'number', 'payment_number', 'nid_front_side', 'nid_back_side', 'password', 'confirm_password',
             'role', 'terms_accept'
         ]
 

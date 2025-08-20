@@ -11,7 +11,6 @@ class RegisterViewSet(viewsets.ViewSet):
     renderer_classes = [JSONRenderer]
 
     def create(self, request, *args, **kwargs):
-        print('Request data : ', request.data)
         if not request.data:
             return Response({
                 'success': False,
@@ -21,10 +20,10 @@ class RegisterViewSet(viewsets.ViewSet):
         serializer = RegisterSerializer(data=request.data)
 
         if serializer.is_valid():
-            user = serializer.save()
+            serializer.save()
             return Response({
                 'success': True,
-                'message': 'User registered successfully',
+                'message': 'Registered successfully',
                 'data': serializer.data,
             }, status=status.HTTP_201_CREATED)
 

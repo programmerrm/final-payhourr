@@ -15,12 +15,12 @@ urlpatterns = [
     path(
         'connection-request-send/',
         ConnectionRequestSendView.as_view(),
-        name='connection_request_send',
+        name='connection_requests_list',
     ),
     path(
         'connection-requests/',
         ConnectionRequestsView.as_view({'get': 'list'}),
-        name='connection_requests',
+        name='connection_requests_list',
     ),
     path(
         'connection-request-delete/',

@@ -1,9 +1,10 @@
 import json
-from .models import Chat
-from django.contrib.auth import get_user_model
-from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
+from channels.db import database_sync_to_async
+from django.contrib.auth import get_user_model
+from chat.models import Chat
+from notifications.models import Notification
 
 User = get_user_model()
 
@@ -25,17 +26,25 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def send_notification(self, event):
-        message = event['message']
+        message = event.get('message')
+        request_id = event.get('request_id')
         await self.send(text_data=json.dumps({
-            'notification': message
+            'type': 'new',
+            'request_id': request_id,
+            'message': message
+        }))
+
+    async def remove_notification(self, event):
+        request_id = event.get('request_id')
+        await self.send(text_data=json.dumps({
+            'type': 'remove',
+            'request_id': request_id
         }))
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
-
-        print(f"[CONNECT] User connected to room: {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -44,17 +53,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        print(f"[DISCONNECT] User disconnected from room: {self.room_name}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
     async def receive(self, text_data):
-        print(f"[RECEIVE] Raw data received: {text_data}")
         data_json = json.loads(text_data)
-        print(f"[RECEIVE] Parsed data: {data_json}")
-
         message = data_json.get('message')
         sender_data = data_json.get('sender', {})
         receiver_data = data_json.get('receiver', {})
@@ -86,23 +91,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-        # Send notification to the receiver's notification group
+        # Send notification to the receiver
         await self.send_chat_notification(receiver_id, sender_username, message)
 
     async def chat_message(self, event):
-        print(f"[CHAT MESSAGE] Sending message to WebSocket: {event['message']}")
         await self.send(text_data=event['message'])
 
     async def send_chat_notification(self, receiver_id, sender_username, message):
         if not receiver_id:
-            print("[NOTIFICATION] No receiver ID, skipping notification.")
             return
+
+        # Save Notification in DB
+        await self.save_notification(receiver_id, sender_username, message)
+
+        # Send via WebSocket
         channel_layer = get_channel_layer()
         await channel_layer.group_send(
             f'user_{receiver_id}',
             {
                 'type': 'send_notification',
-                'message': f'New message from {sender_username}: {message[:50]}',  # message preview
+                'message': f'New message from {sender_username}: {message[:50]}',
             }
         )
 
@@ -111,14 +119,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             sender = User.objects.get(username=sender_username)
             receiver = User.objects.get(username=receiver_username)
-            chat = Chat.objects.create(
+            Chat.objects.create(
                 room_name=room_name,
                 sender=sender,
                 receiver=receiver,
                 content=content
             )
-            print(f"[DB] Message saved: {chat}")
-        except User.DoesNotExist:
-            print(f"[ERROR] Sender or receiver not found: {sender_username}, {receiver_username}")
-        except Exception as e:
-            print(f"[ERROR] Failed to save message: {e}")
+        except:
+            pass
+
+    @database_sync_to_async
+    def save_notification(self, receiver_id, sender_username, message):
+        try:
+            receiver = User.objects.get(id=receiver_id)
+            Notification.objects.create(
+                user=receiver,
+                notification_type=Notification.NotificationType.MESSAGE,
+                message=f"New message from {sender_username}: {message[:50]}",
+                url=f"/chat/{receiver.username}/"
+            )
+        except:
+            pass

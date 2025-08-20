@@ -12,7 +12,6 @@ export const ConnectedUsers: React.FC = () => {
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading users</div>;
     const users = data?.results?.[0]?.connected_users ?? [];
-
     const generateRoomName = (otherUsername: string) => {
         const usernames = [currentUsername, otherUsername].sort();
         return `${usernames[0]}_${usernames[1]}`;
@@ -29,7 +28,13 @@ export const ConnectedUsers: React.FC = () => {
                         <div className="flex items-center gap-3 p-4 cursor-pointer">
                             <div className="relative">
                                 <div className="absolute w-3 h-3 rounded-full bg-green-500 bottom-0 right-0 z-10  border-2 border-white"></div>
-                                <img src="https://i.pravatar.cc/150?img=8" className="w-10 h-10 rounded-full object-cover shadow" />
+                                {user.image ? (
+                                    <img src={`${user.image}`} className="w-10 h-10 rounded-full object-cover shadow" />
+                                ) : (
+                                    <div className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mx-auto">
+                                        {user?.username?.[0]?.toUpperCase() || "?"}
+                                    </div>
+                                )}
                             </div>
                             <div className="flex-1">
                                 <div className="flex justify-between">
