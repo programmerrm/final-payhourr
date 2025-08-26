@@ -35,7 +35,7 @@ export const User: React.FC<Props> = ({ onClose }) => {
         >
             <motion.div
                 key="user-card"
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-xl relative overflow-hidden"
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-xl relative max-h-[90vh] overflow-y-auto"
                 initial={{ scale: 0.8, opacity: 0, y: 50 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.8, opacity: 0, y: -50 }}

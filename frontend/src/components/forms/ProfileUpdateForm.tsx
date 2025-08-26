@@ -92,7 +92,7 @@ export const ProfileUpdateForm: React.FC = () => {
 
     if (userDataLoading) {
         return (
-            <div className="w-[500px] h-[500px] flex flex-col gap-4 p-5 animate-pulse">
+            <div className="sm:w-[500px] sm:h-[500px] flex flex-col gap-4 p-5 animate-pulse">
                 <div className="flex justify-center">
                     <div className="w-32 h-32 rounded-full bg-gray-200"></div>
                 </div>
@@ -107,7 +107,7 @@ export const ProfileUpdateForm: React.FC = () => {
     }
 
     return (
-        <form className="flex flex-col gap-4 w-[500px] h-[500px] overflow-y-scroll scrollbar-hidden" onSubmit={handleSubmit(onSubmitForm)}>
+        <form className="flex flex-col gap-4 sm:w-[500px] sm:h-[500px] mx-auto overflow-y-scroll scrollbar-hidden" onSubmit={handleSubmit(onSubmitForm)}>
             <div className="flex flex-col flex-wrap">
                 <Field label={""} error={errors.image}>
                     <div className="flex flex-col items-center">
@@ -135,7 +135,7 @@ export const ProfileUpdateForm: React.FC = () => {
                     </div>
                 </Field>
             </div>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid sm:grid-cols-2 gap-5 ml-0.5 mr-0.5">
                 <div className="flex flex-col flex-wrap">
                     <Field label={"First Name (NID card)"} error={errors.first_name}>
                         <input

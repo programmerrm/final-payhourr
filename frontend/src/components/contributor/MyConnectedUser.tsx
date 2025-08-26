@@ -169,7 +169,7 @@ export default function MyConnectedUser() {
                         onClick={closeDispute}
                     >
                         <motion.div
-                            className="bg-white rounded-xl p-6 w-full max-w-2xl relative"
+                            className="bg-white rounded-xl p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto"
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}

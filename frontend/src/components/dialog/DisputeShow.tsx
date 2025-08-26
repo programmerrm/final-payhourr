@@ -57,7 +57,7 @@ export const DisputeShow: React.FC<DisputeShowProps> = ({ id, onClose, refetch }
                     transition={{ duration: 0.25 }}
                 >
                     <motion.div
-                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full sm:max-w-lg md:max-w-xl p-2.5 py-4 md:p-8 relative"
+                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full sm:max-w-lg md:max-w-xl  p-2.5 py-4 md:p-8 relative"
                         onClick={(e) => e.stopPropagation()}
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}

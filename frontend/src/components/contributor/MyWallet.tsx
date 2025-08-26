@@ -73,7 +73,7 @@ export default function MyWallet() {
                             </div>
                         </div>
 
-                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2 lg:col-span-full">
+                        <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2 col-span-full">
                             <div className="bg-[#1E2841] py-2.5 px-1 text-center">
                                 <h3 className="text-white text-lg sm:text-xl font-bold">
                                     Withdraw Funds

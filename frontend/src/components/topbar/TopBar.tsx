@@ -1,15 +1,15 @@
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMatches } from "react-router-dom";
-import type { RootState } from "../../redux/store";
-import { RequestForm } from "../forms/RequestForm";
-import { ReactIcons } from "../../utils/ReactIcons";
 import { useGetUserQuery } from "../../redux/features/auth/authApi";
+import { useGetAllNotificationQuery } from "../../redux/features/notification/notificationApi";
+import type { RootState } from "../../redux/store";
 import { MEDIA_URL } from "../../utils/Api";
+import { ReactIcons } from "../../utils/ReactIcons";
+import { RequestForm } from "../forms/RequestForm";
 import { NotificationModal } from "../modals/Notification";
 import { User } from "../modals/User";
-import { AnimatePresence } from "framer-motion";
-import { useGetAllNotificationQuery } from "../../redux/features/notification/notificationApi";
 
 type RouteHandle = { title?: string };
 type TopBarProps = { onMenuClick: () => void };
@@ -84,9 +84,9 @@ export const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                 <div className="order-2 md:order-last flex flex-row flex-wrap items-center gap-x-5">
                     <button
                         onClick={() => setOpenNotifications(true)}
-                        className="bg-white p-3 rounded-full relative"
+                        className="bg-white p-2 md:p-3 rounded-full relative"
                     >
-                        <IoNotifications className="text-2xl" />
+                        <IoNotifications className="text-xl md:text-2xl" />
                         <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full" />
                     </button>
                     <button

@@ -58,10 +58,10 @@ export const SellerDashboard: React.FC = () => {
                 <div className="w-auto border border-gray-300 rounded-2xl shadow-md bg-white shrink-0 flex flex-col overflow-scroll scrollbar-hidden">
                     <h2 className="p-4 border-b border-gray-300 text-xl font-bold text-center text-black bg-gray-100 rounded-t-2xl">Network Updates</h2>
                     <div className="grid grid-cols-4 text-center divide-x divide-gray-300 bg-white font-semibold text-sm text-gray-700">
-                        <div className="p-3 text-nowrap">Time</div>
-                        <div className="p-3 text-nowrap">User</div>
-                        <div className="p-3 text-nowrap">Type</div>
-                        <div className="p-3 text-nowrap">BDT</div>
+                        <div className="p-3 ">Time</div>
+                        <div className="p-3 ">User</div>
+                        <div className="p-3 ">Type</div>
+                        <div className="p-3 ">BDT</div>
                     </div>
 
                     {data?.data?.length > 0 ? (
@@ -70,15 +70,15 @@ export const SellerDashboard: React.FC = () => {
                                 key={index}
                                 className="grid grid-cols-4 text-center divide-x divide-gray-200 border-t border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition"
                             >
-                                <p className="p-3 text-nowrap">
+                                <p className="p-3 ">
                                     {new Date(txn.created_at).toLocaleTimeString([], {
                                         hour: '2-digit',
                                         minute: '2-digit',
                                     })}
                                 </p>
-                                <p className="p-3 text-nowrap">@{txn.user.username}</p>
-                                <p className="p-3 text-nowrap">{txn.type}</p>
-                                <p className="p-3 text-nowrap">{txn.amount}৳</p>
+                                <p className="p-3 whitespace-normal break-words">@{txn.user.username}</p>
+                                <p className="p-3 ">{txn.type}</p>
+                                <p className="p-3 ">{txn.amount}৳</p>
                             </div>
                         ))
                     ) : (

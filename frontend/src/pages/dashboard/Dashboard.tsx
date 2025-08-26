@@ -31,7 +31,7 @@ export default function Dashboard() {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <main className="flex-1 py-2.5 px-2.5 md:p-6 md:pt-5 flex flex-col h-full overflow-hidden">
+                <main className="flex-1 py-2.5 px-2.5 md:p-6 md:pt-5 flex flex-col h-full overflow-x-hidden">
                     <TopBar onMenuClick={() => setIsSidebarOpen(true)} />
                     <Outlet />
                 </main>
