@@ -1,6 +1,9 @@
 version: '3.9'
 
 services:
+  # ==========================
+  # FRONTEND
+  # ==========================
   frontend:
     build:
       context: ./frontend
@@ -11,6 +14,9 @@ services:
       - pngnet
     restart: unless-stopped
 
+  # ==========================
+  # BACKEND (Django)
+  # ==========================
   backend:
     build:
       context: ./backend
@@ -18,25 +24,52 @@ services:
     volumes:
       - ./backend:/app
     env_file:
-      - ./backend/.env
+      - ./backend/.env.prod
     networks:
       - pngnet
-    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    depends_on:
+      - db
+      - redis
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 4
     restart: unless-stopped
 
+  # ==========================
+  # CELERY WORKER
+  # ==========================
   celery:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
     env_file:
-      - ./backend/.env
+      - ./backend/.env.prod
     networks:
       - pngnet
     depends_on:
       - backend
-    command: celery -A app worker --loglevel=info
+      - redis
+    command: celery -A app worker --loglevel=info --pool=solo
     restart: unless-stopped
 
+  # ==========================
+  # CELERY BEAT (Periodic Tasks)
+  # ==========================
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./backend/.env.prod
+    networks:
+      - pngnet
+    depends_on:
+      - redis
+      - backend
+    command: celery -A app beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    restart: unless-stopped
+
+  # ==========================
+  # REDIS
+  # ==========================
   redis:
     image: redis:7-alpine
     ports:
@@ -45,6 +78,29 @@ services:
       - pngnet
     restart: unless-stopped
 
+  # ==========================
+  # MYSQL DATABASE
+  # ==========================
+  db:
+    image: mysql:8.1
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER_NAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - pngnet
+    restart: unless-stopped
+
+  # ==========================
+  # NGINX
+  # ==========================
   nginx:
     image: nginx:1.24-alpine
     ports:
@@ -64,6 +120,16 @@ services:
       - pngnet
     restart: unless-stopped
 
+# ==========================
+# NETWORKS
+# ==========================
 networks:
   pngnet:
     driver: bridge
+
+# ==========================
+# VOLUMES
+# ==========================
+volumes:
+  mysql_data:
+    driver: local

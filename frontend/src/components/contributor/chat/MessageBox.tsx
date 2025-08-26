@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ChatMessage, UserInfo } from "../../../types/chat/ChatProps";
 import { ReactIcons } from "../../../utils/ReactIcons";
+import { toast } from "react-toastify";
+import { useAddOrderUpdateMutation } from "../../../redux/features/orders/ordersApi";
 
 interface MessageBoxProps {
     messages: ChatMessage[];
@@ -21,6 +23,27 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
     const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
     const closeMedia = () => setSelectedMedia(null);
     const { IoMdClose } = ReactIcons;
+
+    const [addOrderUpdate] = useAddOrderUpdateMutation();
+
+    const handleCancelOrder = async (orderID: any) => {
+        try {
+            await addOrderUpdate({ id: orderID, is_approved: false }).unwrap();
+            toast.success("Order cancelled successfully");
+        } catch (error: any) {
+            console.log(error);
+        }
+    }
+
+    const handleAcceptOrder = async (orderID: any) => {
+        try {
+            await addOrderUpdate({ id: orderID, is_approved: true }).unwrap();
+            toast.success("Order approved successfully");
+        } catch (error: any) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="flex-grow overflow-y-auto scrollbar-hidden bg-white p-2 md:p-4 rounded-lg mb-4 space-y-2 md:space-y-6 relative">
             {messages.length === 0 ? (
@@ -80,8 +103,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                 {isPdf && (
                                     <div
                                         className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
-                                                ? "bg-blue-600 text-white rounded-br-none"
-                                                : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
+                                            ? "bg-blue-600 text-white rounded-br-none"
+                                            : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
                                             }`}
                                     >
                                         <p className="mb-2 font-medium">Here’s the PDF:</p>
@@ -98,8 +121,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                 {isOtherFile && (
                                     <div
                                         className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
-                                                ? "bg-blue-600 text-white rounded-br-none"
-                                                : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
+                                            ? "bg-blue-600 text-white rounded-br-none"
+                                            : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
                                             }`}
                                     >
                                         <p className="mb-2 font-medium">Attached file:</p>
@@ -114,14 +137,37 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                                     </div>
                                 )}
                                 {!isFileUrl(msg.message) && (
-                                    <div
-                                        className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage
-                                                ? "bg-blue-600 text-white rounded-br-none"
-                                                : "bg-gray-200 text-gray-900 rounded-bl-none"
-                                            }`}
-                                    >
-                                        {msg.message}
-                                    </div>
+                                    msg.message.trim().startsWith("<") ? (
+                                        <div
+                                            className={`p-4 rounded-2xl shadow-lg max-w-xs w-full ${isOwnMessage ? "bg-blue-600 text-white rounded-br-none" : "bg-gray-100 text-gray-900 rounded-bl-none"}`}
+                                        >
+                                            <div
+                                                className="space-y-2 text-sm md:text-base"
+                                                dangerouslySetInnerHTML={{ __html: msg.message }}
+                                            />
+                                            {isOwnMessage ? (
+                                                <button
+                                                    className="mt-3 w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                                                    onClick={() => handleCancelOrder(msg?.order?.id)}
+                                                >
+                                                    Cancel Order
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="mt-3 w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                                                    onClick={() => handleAcceptOrder(msg?.order?.id)}
+                                                >
+                                                    Accept Order
+                                                </button>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={`p-3 rounded-2xl shadow text-sm max-w-xs ${isOwnMessage ? "bg-blue-600 text-white rounded-br-none" : "bg-gray-200 text-gray-900 rounded-bl-none"}`}
+                                        >
+                                            <p>{msg.message}</p>
+                                        </div>
+                                    )
                                 )}
                             </div>
                             {isOwnMessage && renderUserAvatar(msg.sender)}

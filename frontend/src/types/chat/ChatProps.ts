@@ -10,7 +10,11 @@ export interface ChatMessage {
     sender: UserInfo;
     receiver: UserInfo;
     message: string;
+    order?: {
+        id: number;
+    };
 }
+
 
 export interface MessageInputProps {
     message: string;

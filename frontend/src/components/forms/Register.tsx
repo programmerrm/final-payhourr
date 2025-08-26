@@ -128,6 +128,38 @@ export const RegisterForm: React.FC = () => {
                 className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 w-full"
                 onSubmit={handleSubmit(onSubmitForm)}
             >
+                {/* Role Selection */}
+                <div className="flex flex-col col-span-full">
+                    <div className="flex gap-x-5">
+                        <label className="flex items-center gap-x-2.5 cursor-pointer">
+                            <input
+                                className="w-4 h-4"
+                                type="radio"
+                                value="buyer"
+                                {...register("role", { required: "Select your role." })}
+                                checked={selectedRole === "buyer"}
+                                onChange={() => setValue("role", "buyer")}
+                            />
+                            Buyer
+                        </label>
+                        <label className="flex items-center gap-x-2.5 cursor-pointer">
+                            <input
+                                className="w-4 h-4"
+                                type="radio"
+                                value="seller"
+                                {...register("role", { required: "Select your role." })}
+                                checked={selectedRole === "seller"}
+                                onChange={() => setValue("role", "seller")}
+                            />
+                            Seller
+                        </label>
+                    </div>
+                    {errors.role && (
+                        <p className="text-[#ED1B24] text-sm" role="alert">
+                            {errors.role.message}
+                        </p>
+                    )}
+                </div>
                 {/* Common fields */}
                 <div className="flex flex-col gap-y-1.5">
                     <Field label="Username / Domain name" error={errors.username}>
@@ -139,7 +171,6 @@ export const RegisterForm: React.FC = () => {
                         />
                     </Field>
                 </div>
-
                 <div className="flex flex-col gap-y-1.5">
                     <Field label="Email" error={errors.email}>
                         <input
@@ -150,11 +181,6 @@ export const RegisterForm: React.FC = () => {
                         />
                     </Field>
                 </div>
-
-
-
-
-
                 {/* Role Based Forms */}
                 <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-6">
                     {selectedRole === "buyer" && (
@@ -170,7 +196,6 @@ export const RegisterForm: React.FC = () => {
                         />
                     )}
                 </div>
-
                 {/* Password */}
                 <div className="flex flex-col gap-y-1">
                     <Field label="Password" error={errors.password}>
@@ -191,7 +216,6 @@ export const RegisterForm: React.FC = () => {
                         </div>
                     </Field>
                 </div>
-
                 {/* Confirm Password */}
                 <div className="flex flex-col gap-y-1">
                     <Field label="Confirm Password" error={errors.confirm_password}>
@@ -212,38 +236,6 @@ export const RegisterForm: React.FC = () => {
                         </div>
                     </Field>
                 </div>
-
-                {/* Role Selection */}
-                <div className="flex flex-col col-span-full">
-                    <div className="flex gap-x-5">
-                        <label className="flex items-center gap-x-2.5 cursor-pointer">
-                            <input
-                                type="radio"
-                                value="buyer"
-                                {...register("role", { required: "Select your role." })}
-                                checked={selectedRole === "buyer"}
-                                onChange={() => setValue("role", "buyer")}
-                            />
-                            Buyer
-                        </label>
-                        <label className="flex items-center gap-x-2.5 cursor-pointer">
-                            <input
-                                type="radio"
-                                value="seller"
-                                {...register("role", { required: "Select your role." })}
-                                checked={selectedRole === "seller"}
-                                onChange={() => setValue("role", "seller")}
-                            />
-                            Seller
-                        </label>
-                    </div>
-                    {errors.role && (
-                        <p className="text-[#ED1B24] text-sm" role="alert">
-                            {errors.role.message}
-                        </p>
-                    )}
-                </div>
-
                 {/* Terms */}
                 <div className="col-span-full">
                     <label className="flex items-start gap-x-2.5 cursor-pointer">
@@ -269,7 +261,6 @@ export const RegisterForm: React.FC = () => {
                         <p className="text-[#ED1B24] text-sm">{errors.terms_accept.message}</p>
                     )}
                 </div>
-
                 {/* Submit */}
                 <div className="col-span-full">
                     <button
@@ -280,7 +271,6 @@ export const RegisterForm: React.FC = () => {
                     </button>
                 </div>
             </form>
-
             <div className="flex justify-center items-center mt-2">
                 <p className="text-base">
                     Already have an account?{" "}

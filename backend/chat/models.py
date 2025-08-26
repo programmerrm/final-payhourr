@@ -5,6 +5,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from orders.models import Order
 
 def validate_file_size(value):
     limit = 100 * 1024 * 1024 
@@ -126,6 +127,12 @@ class Chat(models.Model):
             FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "mp4", "pdf"]),
             validate_file_size
         ]
+    )
+    order = models.ForeignKey(
+        Order, 
+        null=True, 
+        blank=True, 
+        on_delete=models.SET_NULL
     )
     is_read = models.BooleanField(
         default=False, 

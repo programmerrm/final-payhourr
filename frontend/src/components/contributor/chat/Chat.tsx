@@ -66,6 +66,7 @@ export default function Chat() {
     const isFileUrl = (text: string) =>
         /^https?:\/\/.+\.(jpg|jpeg|png|gif|mp4|pdf|docx?|xlsx?|pptx?)$/i.test(text);
 
+    // ✅ Handle initial messages
     useEffect(() => {
         if (initialMessages && Array.isArray(initialMessages)) {
             const newParticipants: { [username: string]: UserInfo } = {};
@@ -81,7 +82,7 @@ export default function Chat() {
                     id: msg.sender.id,
                     username: msg.sender.username,
                     image: msg.sender.image,
-                    email: msg.sender.email, // add email if available
+                    email: msg.sender.email,
                 };
                 newParticipants[msg.receiver.username] = {
                     id: msg.receiver.id,
@@ -95,6 +96,7 @@ export default function Chat() {
                     sender: msg.sender,
                     receiver: msg.receiver,
                     message: msgContent,
+                    order: msg.order ? { id: msg.order.id } : undefined, // ✅ just id
                 };
             });
 
@@ -103,19 +105,28 @@ export default function Chat() {
         }
     }, [initialMessages]);
 
+    // ✅ Handle incoming WebSocket messages
     useEffect(() => {
         if (lastMessage !== null) {
             try {
-                const data: ChatMessage = JSON.parse(lastMessage.data);
+                const data: any = JSON.parse(lastMessage.data);
                 let normalizedMessage = data.message;
 
                 if (typeof normalizedMessage === "string" && isFilePath(normalizedMessage)) {
                     normalizedMessage = normalizeUrl(normalizedMessage);
                 }
 
+                const formatted: ChatMessage = {
+                    id: data.id || uuidv4(),
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    message: normalizedMessage,
+                    order: data.order ? { id: data.order.id } : undefined, // ✅ keep only id
+                };
+
                 setMessages((prev) => {
-                    if (prev.some((msg) => msg.id === data.id)) return prev;
-                    return [...prev, { ...data, message: normalizedMessage }];
+                    if (prev.some((msg) => msg.id === formatted.id)) return prev;
+                    return [...prev, formatted];
                 });
 
                 // Update participants info on new message
@@ -138,15 +149,15 @@ export default function Chat() {
     const handleSend = () => {
         if (!message.trim() || !username || !receiver) return;
 
-        const newMsg = {
+        const newMsg: ChatMessage = {
             id: uuidv4(),
-            sender: participantsInfo[username] || { username },
-            receiver: participantsInfo[receiver] || { username: receiver },
+            sender: participantsInfo[username] || { username } as UserInfo,
+            receiver: participantsInfo[receiver] || { username: receiver } as UserInfo,
             message: message.trim(),
         };
 
         sendMessage(JSON.stringify(newMsg));
-        setMessages((prev) => [...prev, newMsg as ChatMessage]);
+        setMessages((prev) => [...prev, newMsg]);
         setMessage("");
     };
 
@@ -162,15 +173,15 @@ export default function Chat() {
             const fileUrl = response.attachment;
             const fullUrl = normalizeUrl(fileUrl);
 
-            const newMsg = {
+            const newMsg: ChatMessage = {
                 id: uuidv4(),
-                sender: participantsInfo[username] || { username },
-                receiver: participantsInfo[receiver] || { username: receiver },
+                sender: participantsInfo[username] || { username } as UserInfo,
+                receiver: participantsInfo[receiver] || { username: receiver } as UserInfo,
                 message: fullUrl,
             };
 
             sendMessage(JSON.stringify(newMsg));
-            setMessages((prev) => [...prev, newMsg as ChatMessage]);
+            setMessages((prev) => [...prev, newMsg]);
             setSelectedFile(null);
         } catch (error) {
             console.error("File upload failed:", error);

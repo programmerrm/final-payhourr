@@ -12,7 +12,6 @@ class OrderCreateViewSet(APIView):
         sender = request.user
         receiver_id = request.data.get('receiver')
 
-        # Check if there is a pending order between this sender and receiver
         if Order.objects.filter(sender=sender, receiver_id=receiver_id, status='pending').exists():
             return Response({
                 'success': False,

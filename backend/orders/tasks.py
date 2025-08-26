@@ -13,7 +13,6 @@ def send_order_created_email(self, order_id):
     try:
         order = Order.objects.get(id=order_id)
 
-        # Prepare template context
         context = {
             "USER_NAME": order.sender.username,
             "ORDER_NUMBER": order.order_id or f"ORD-{order.id}",
@@ -23,11 +22,9 @@ def send_order_created_email(self, order_id):
             "YEAR": timezone.now().year,
         }
 
-        # Render HTML email
         html_message = render_to_string("emails/new-order.html", context)
         plain_message = strip_tags(html_message) 
 
-        # Send email
         send_order_email(
             order,
             subject=f"New Order Created {order.title}",
@@ -76,10 +73,9 @@ def send_order_cancel_expired_email(self):
     expired_orders = Order.objects.filter(status='pending', delivery_time__lte=now)
     for order in expired_orders:
         try:
-            order.status = 'cancel'
+            order.status = 'cancelled'
             order.save(update_fields=['status'])
             
-            # Send email
             html_message = render_to_string('emails/order-cancel.html', {
                 'user_name': order.sender.username,
                 'order_number': order.order_id or f"ORD-{order.id}",
@@ -98,12 +94,6 @@ def send_order_cancel_expired_email(self):
         except Exception as exc:
             logger.error(f"Failed to cancel or send email for Order #{order.id}: {exc}")
             self.retry(exc=exc)
-
-
-
-
-
-
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=60)
 def send_order_status_email(self, order_id, status):

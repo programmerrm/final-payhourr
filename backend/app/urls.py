@@ -32,6 +32,7 @@ urlpatterns = [
     path('', lambda request: JsonResponse({"message": "Welcome to the Payhourr API 🚀"})),
     path('admin/', admin.site.urls),
     path(f'{BASE_API}/accounts/', include('api.accounts.urls')),
+    path(f'{BASE_API}/dashboard/', include('api.dashboard.urls')),
     path(f'{BASE_API}/configuration/',include('api.configuration.urls')),
     path(f'{BASE_API}/notifications/',include('api.notifications.urls')),
     path(f'{BASE_API}/chat/', include('api.chat.urls')),

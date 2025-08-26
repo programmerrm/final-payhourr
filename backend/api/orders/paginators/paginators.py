@@ -6,7 +6,7 @@ from rest_framework.pagination import PageNumberPagination
 class OrdersPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def paginate_queryset(self, queryset, request, view=None):

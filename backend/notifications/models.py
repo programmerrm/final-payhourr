@@ -11,6 +11,9 @@ class Notification(models.Model):
         MESSAGE = "message", "Message"
         DISPUTE = "dispute", "Dispute"
         SYSTEM = "system", "System"
+        ORDER_CREATED = "order_created", "Order Created"
+        ORDER_CANCELLED = "order_cancelled", "Order Cancelled"
+        ORDER_COMPLETED = "order_completed", "Order Completed"
 
     user = models.ForeignKey(
         User,

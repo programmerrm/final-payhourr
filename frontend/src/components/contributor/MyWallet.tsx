@@ -2,14 +2,33 @@ import { useState } from "react";
 import { useGetPaymentHistoryQuery } from "../../redux/features/payments/paymentsApi";
 import { Pagination } from "../pagination/Pagination";
 import { ReactIcons } from "../../utils/ReactIcons";
+import abbank from "../../assets/payment-method/ab-bank.jpg";
+import agranibank from "../../assets/payment-method/agrani-bank.jpg";
+import bankasia from "../../assets/payment-method/bank-asia.jpg";
+import bk from "../../assets/payment-method/bk.jpg";
+import brackbank from "../../assets/payment-method/brack-bank.jpg";
+import citybank from "../../assets/payment-method/city-bank.jpg";
+import dbbl from "../../assets/payment-method/dbbl.jpg";
+import islamibank from "../../assets/payment-method/islami-bank.jpg";
+import jamunabnak from "../../assets/payment-method/jamuna-bnak.jpg";
+import janatabank from "../../assets/payment-method/janata-bank.jpg";
+import ng from "../../assets/payment-method/ng.jpg";
+import premiurbank from "../../assets/payment-method/premiur-bank.jpg";
+import rk from "../../assets/payment-method/rk.jpg";
+import rupalibank from "../../assets/payment-method/rupali-bank.jpg";
+import sonalibank from "../../assets/payment-method/sonali-bank.jpg";
+import { useGetBuyerDashboardInfoQuery } from "../../redux/features/dashboard/dashboardApi";
 
 export default function MyWallet() {
     const [page, setPage] = useState<number>(1);
+    const { data: buyerData } = useGetBuyerDashboardInfoQuery(undefined, { refetchOnMountOrArgChange: true });
     const { data: paymentHistory } = useGetPaymentHistoryQuery({ page }, { refetchOnMountOrArgChange: true });
     const currentPage = page;
     const totalPages = paymentHistory?.pagination?.total_pages || 1;
 
     const { MdOutlinePayment } = ReactIcons;
+
+    console.log('buyer data : ', buyerData);
 
     return (
         <div className=" space-y-5">
@@ -24,7 +43,7 @@ export default function MyWallet() {
                                 <h3 className="text-white text-lg sm:text-xl font-bold">Available Balance</h3>
                             </div>
                             <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
-                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">1300/-</p>
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">{buyerData?.total_balance || 0}/-</p>
                             </div>
                         </div>
                         <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
@@ -32,7 +51,7 @@ export default function MyWallet() {
                                 <h3 className="text-white text-lg sm:text-xl font-bold">On Hold</h3>
                             </div>
                             <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
-                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">500/-</p>
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">{buyerData?.total_balance || 0}/-</p>
                             </div>
                         </div>
                         <div className="border border-[#656565] rounded-2xl overflow-hidden pb-2">
@@ -40,7 +59,7 @@ export default function MyWallet() {
                                 <h3 className="text-white text-lg sm:text-xl font-bold">Withdrawn Total</h3>
                             </div>
                             <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
-                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">8500/-</p>
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">{buyerData?.total_withdrawn || 0}/-</p>
                             </div>
                         </div>
 
@@ -50,7 +69,7 @@ export default function MyWallet() {
                                 <h3 className="text-white text-lg sm:text-xl font-bold">Total Deposited</h3>
                             </div>
                             <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex items-center justify-center">
-                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">9000/-</p>
+                                <p className="text-[#1B253F] text-xl sm:text-2xl md:text-3xl font-bold">{buyerData?.total_deposit || 0}/-</p>
                             </div>
                         </div>
 
@@ -62,18 +81,22 @@ export default function MyWallet() {
                             </div>
                             <div className="p-2 border-b border-b-[#656565] rounded-bl-2xl rounded-br-2xl text-center min-h-[140px] flex flex-col gap-4 items-center justify-center">
                                 <div className="flex flex-wrap items-center justify-center gap-2">
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Bkash-logo.jpg" alt="bkash logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Nagad-Logo.wine.svg" alt="nogod logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Rocket_mobile_banking_logo.svg.png" alt="rocket logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./islaamii-bank-bangla-20240529135428.jpg" alt="islaamii logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./hnxLWUrwLR5cbqw6JaWG_22_6c1af0b6b5d0f78bfbaf9aeb652a959b_jvectors.webp" alt="dbbl logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./51056-city-bank-thumb.jpg" alt="city logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Bkash-logo.jpg" alt="bkash logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Nagad-Logo.wine.svg" alt="nogod logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./Rocket_mobile_banking_logo.svg.png" alt="rocket logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./islaamii-bank-bangla-20240529135428.jpg" alt="islaamii logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./hnxLWUrwLR5cbqw6JaWG_22_6c1af0b6b5d0f78bfbaf9aeb652a959b_jvectors.webp" alt="dbbl logo" />
-                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src="./51056-city-bank-thumb.jpg" alt="city logo" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={abbank} alt="abbank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={agranibank} alt="agranibank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={bankasia} alt="bankasia" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={bk} alt="bk" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={brackbank} alt="brackbank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={citybank} alt="citybank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={dbbl} alt="dbbl" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={islamibank} alt="islamibank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={jamunabnak} alt="jamunabnak" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={janatabank} alt="janatabank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={ng} alt="ng" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={premiurbank} alt="premiurbank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={rk} alt="rk" />
+
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={rupalibank} alt="rupalibank" />
+                                    <img className="w-[90px] h-[50px] object-contain border border-[#656565] p-1" src={sonalibank} alt="sonalibank" />
                                 </div>
                                 <button className="flex flex-row flex-wrap items-center justify-center gap-x-2.5 text-white text-base sm:text-lg md:text-xl font-semibold py-2 px-4 min-w-[182px] rounded-2xl bg-[#1E2841]">
                                     <MdOutlinePayment className="text-white text-2xl" />

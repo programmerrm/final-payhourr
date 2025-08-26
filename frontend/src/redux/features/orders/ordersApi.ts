@@ -16,8 +16,22 @@ const ordersApi = apiSlice.injectEndpoints({
                 body: formData,
             }),
         }),
+        addOrderUpdate: builder.mutation({
+            query: ({id, ...formData}) => ({
+                url: `/orders/update/${id}/`,
+                method: 'PATCH',
+                body: formData,
+            }),
+        }),
+
+        getSingleOrder: builder.query<any, number>({
+            query: (id) => `/orders/single-order/${id}/`,
+        }),
         getReciverOrder: builder.query<any, void>({
             query: () => '/orders/receiver-order/',
+        }),
+        getOrders: builder.query<any, { search?: string; page?: number }>({
+            query: ({ search = '', page = 1 }) => `/orders/list/?search=${search}&page=${page}`,
         }),
     }),
 });
@@ -25,6 +39,9 @@ const ordersApi = apiSlice.injectEndpoints({
 export const {
     useAddInitPaymentMutation,
     useAddOrderCreateMutation,
+    useAddOrderUpdateMutation,
 
     useGetReciverOrderQuery,
+    useGetOrdersQuery,
+    useGetSingleOrderQuery,
 } = ordersApi;

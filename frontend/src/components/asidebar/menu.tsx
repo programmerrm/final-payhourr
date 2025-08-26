@@ -1,6 +1,6 @@
 import type { MenuItemProps } from "../../types/menu/menuProps";
 import { ReactIcons } from "../../utils/ReactIcons";
-const { BsChatFill, FaBorderAll, FaWallet, MdOutlinePayment, MdDashboard, IoSettings, FaNetworkWired, BiGitPullRequest, MdReport } = ReactIcons
+const { BsChatFill, FaBorderAll, FaWallet, MdOutlinePayment, MdDashboard, FaNetworkWired, BiGitPullRequest, MdReport, MdManageAccounts } = ReactIcons
 
 export const SellerMenu: MenuItemProps[] = [
     {
@@ -53,9 +53,9 @@ export const SellerMenu: MenuItemProps[] = [
     },
     {
         id: 9,
-        name: 'Settings',
+        name: 'My Account',
         path: '/settings/',
-        icon: <IoSettings className="text-2xl" />
+        icon: <MdManageAccounts className="text-2xl" />
     },
 ];
 
@@ -152,9 +152,9 @@ export const BuyerMenu: MenuItemProps[] = [
     },
     {
         id: 8,
-        name: 'Settings',
+        name: 'My Account',
         path: '/settings/',
-        icon: <IoSettings className="text-2xl" />
+        icon: <MdManageAccounts className="text-2xl" />
     },
     {
         id: 9,

@@ -13,6 +13,7 @@ export default function Dispute() {
         { search, page },
         { refetchOnMountOrArgChange: true }
     );
+
     const { IoMdEye } = ReactIcons;
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,23 +21,16 @@ export default function Dispute() {
         setPage(1);
     };
 
+    const handleDisputeShow = (id: number) => setSelected(id);
+    const handleCloseModal = () => setSelected(null);
+
     const currentPage = page;
     const totalPages = data?.pagination?.total_pages || 1;
-
-    const handleDisputeShow = (id: number) => {
-        setSelected(id);
-    };
-
-    const handleCloseModal = () => {
-        setSelected(null);
-    };
 
     return (
         <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-700 text-base md:text-2xl font-medium">Dispute History</span>
-                </div>
+                <span className="text-gray-700 text-base md:text-2xl font-medium">Dispute History</span>
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-700 font-medium">Search:</label>
                     <input
@@ -53,7 +47,7 @@ export default function Dispute() {
                 <table className="min-w-full text-sm text-center">
                     <thead className="bg-[#1C2640] text-white text-xs uppercase sticky top-0 z-10">
                         <tr>
-                            <th className="px-6 py-4">Serial</th>
+                            <th className="px-6 py-4">Photo</th>
                             <th className="px-6 py-4">User ID</th>
                             <th className="px-6 py-4">Against User</th>
                             <th className="px-6 py-4">Dispute Title</th>
@@ -87,10 +81,22 @@ export default function Dispute() {
                         {!isLoading &&
                             data?.data?.map((dispute: any) => (
                                 <tr key={dispute.id} className="hover:bg-gray-100 transition">
-                                    <td className="px-6 py-4 font-medium text-gray-900">{dispute.id}</td>
-                                    <td className="px-6 py-4">{dispute.raised_by?.user_id || "-"}</td>
+                                    <td className="px-6 py-4">
+                                        {dispute.against_user?.image ? (
+                                            <img
+                                                src={dispute.against_user.image}
+                                                alt={dispute.against_user.username}
+                                                className="w-8 h-8 rounded-full mx-auto"
+                                            />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mx-auto">
+                                                {dispute.against_user?.username?.[0]?.toUpperCase() || "?"}
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4">{dispute.against_user?.user_id || "-"}</td>
                                     <td className="px-6 py-4">@{dispute.against_user?.username || "-"}</td>
-                                    <td className="px-6 py-4">{dispute.subject}</td>
+                                    <td className="px-6 py-4">{dispute.title}</td>
                                     <td className="px-6 py-4 font-bold text-blue-600">
                                         {new Date(dispute.created_at).toLocaleDateString("en-GB")}
                                     </td>
@@ -112,7 +118,15 @@ export default function Dispute() {
 
             <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
 
-            {selected !== null && <DisputeShow id={selected} onClose={handleCloseModal} refetch={refetch} />}
+            {/* Modal */}
+            {selected !== null && (
+                <DisputeShow
+                    key={selected} // 🔑 important for resetting animation
+                    id={selected}
+                    onClose={handleCloseModal}
+                    refetch={refetch}
+                />
+            )}
         </div>
     );
 }

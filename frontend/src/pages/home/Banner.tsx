@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { toggleAuthForm, toggleForm } from "../../redux/features/status/statusSlice";
 import { toast } from "react-toastify";
+import { motion, type Variants, easeOut } from "framer-motion";
 
 export const Banner: React.FC = () => {
     const auth = useSelector((state: RootState) => state.auth.user);
@@ -29,8 +30,20 @@ export const Banner: React.FC = () => {
         }
     };
 
+    // Zoom + Fade effect for h1
+    const textVariant: Variants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: easeOut } }
+    };
+
+    // Slide-up + fade for buttons
+    const buttonsVariant: Variants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeOut, delay: 0.5 } }
+    };
+
     return (
-        <section className="!h-screen overflow-hidden">
+        <section className="!h-screen overflow-hidden relative">
             <video
                 className="absolute top-0 left-0 w-full h-full object-cover"
                 src={BannerVideo}
@@ -39,14 +52,29 @@ export const Banner: React.FC = () => {
                 muted
                 playsInline
             ></video>
+
             <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
+
             <div className="max-w-screen-2xl mx-auto px-2.5 lg:px-5 w-full h-full">
                 <div className="relative z-20 flex flex-col items-center justify-center gap-y-6 md:gap-y-14 h-full text-white">
-                    <h1 className="text-center text-[26px] sm:text-3xl md:text-[80px] font-bold w-[80%] leading-[36px] md:leading-[90px]">
+                    
+                    {/* Zoom + Fade H1 */}
+                    <motion.h1
+                        className="text-center text-[26px] sm:text-3xl md:text-[80px] font-bold w-[80%] leading-[36px] md:leading-[90px]"
+                        variants={textVariant}
+                        initial="hidden"
+                        animate="visible"
+                    >
                         Securely connect with sellers Pay after you're satisfied.
-                    </h1>
+                    </motion.h1>
 
-                    <div className="flex flex-row flex-wrap justify-center items-center gap-x-5 md:gap-x-10 w-full">
+                    {/* Buttons Slide-up + Fade */}
+                    <motion.div
+                        className="flex flex-row flex-wrap justify-center items-center gap-x-5 md:gap-x-10 w-full"
+                        variants={buttonsVariant}
+                        initial="hidden"
+                        animate="visible"
+                    >
                         <button
                             type="button"
                             onClick={() => handleRoleClick("buyer")}
@@ -61,7 +89,7 @@ export const Banner: React.FC = () => {
                         >
                             Seller
                         </button>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

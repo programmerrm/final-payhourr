@@ -8,8 +8,10 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { MdSyncProblem, MdDashboard, MdOutlinePayment, MdReport } from "react-icons/md";
 import { BsChatFill } from "react-icons/bs";
 import { BiGitPullRequest } from "react-icons/bi";
+import { MdManageAccounts } from "react-icons/md";
 
 export const ReactIcons = {
+  MdManageAccounts,
   MdReport,
   BiGitPullRequest,
   FaNetworkWired,

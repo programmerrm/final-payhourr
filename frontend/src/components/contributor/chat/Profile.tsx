@@ -97,7 +97,7 @@ export const Profile: React.FC<ProfileProps> = ({ receiverUsername, participants
 
                             <button
                                 onClick={openRating}
-                                className="text-xs md:text-base bg-indigo-600 text-white px-4 pr-5 py-2 md:py-2.5 rounded hover:bg-indigo-700 transition"
+                                className={`text-xs md:text-base ${reciverOrder?.data?.status === "pending" || reciverOrder?.data?.status === "cancel" ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 text-white hover:bg-indigo-700"} px-4 pr-5 py-2 md:py-2.5 rounded transition`}
                                 disabled={reciverOrder?.data?.status === "pending" || reciverOrder?.data?.status === "cancel"}
                             >
                                 Rating Now
