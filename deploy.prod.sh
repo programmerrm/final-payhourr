@@ -14,7 +14,8 @@ docker image prune -f
 
 echo "📂 Step 4: Database migrations..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py makemigrations --noinput
-docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
+# ✅ Use --fake-initial to skip migrations for tables that already exist
+docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --fake-initial
 
 echo "📂 Step 5: Collect static files..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
