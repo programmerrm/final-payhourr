@@ -1,9 +1,6 @@
 version: '3.9'
 
 services:
-  # ==========================
-  # FRONTEND
-  # ==========================
   frontend:
     build:
       context: ./frontend
@@ -14,9 +11,6 @@ services:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # BACKEND (Django)
-  # ==========================
   backend:
     build:
       context: ./backend
@@ -31,18 +25,12 @@ services:
     command: gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 4
     restart: unless-stopped
 
-  # ==========================
-  # CELERY WORKER
-  # ==========================
   celery:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
     env_file:
       - ./backend/.env.prod
-    environment:
-      CELERY_BROKER_URL_HOST: redis
-      CELERY_BROKER_URL_PORT: 6379
     networks:
       - pngnet
     depends_on:
@@ -51,18 +39,12 @@ services:
     command: celery -A app worker --loglevel=info
     restart: unless-stopped
 
-  # ==========================
-  # CELERY BEAT (Periodic Tasks)
-  # ==========================
   celery-beat:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
     env_file:
       - ./backend/.env.prod
-    environment:
-      CELERY_BROKER_URL_HOST: redis
-      CELERY_BROKER_URL_PORT: 6379
     networks:
       - pngnet
     depends_on:
@@ -71,18 +53,12 @@ services:
     command: celery -A app beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     restart: unless-stopped
 
-  # ==========================
-  # REDIS
-  # ==========================
   redis:
     image: redis:7-alpine
     networks:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # MYSQL DATABASE
-  # ==========================
   db:
     image: mysql:8.1
     env_file:
@@ -98,9 +74,6 @@ services:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # NGINX
-  # ==========================
   nginx:
     image: nginx:1.24-alpine
     ports:
@@ -120,16 +93,10 @@ services:
       - pngnet
     restart: unless-stopped
 
-# ==========================
-# NETWORKS
-# ==========================
 networks:
   pngnet:
     driver: bridge
 
-# ==========================
-# VOLUMES
-# ==========================
 volumes:
   mysql_data:
     driver: local
