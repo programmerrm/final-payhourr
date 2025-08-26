@@ -60,3 +60,59 @@ class BuyerDashboardInfoViewSet(viewsets.ViewSet):
         }
 
         return response.Response(data)
+
+class SellerDashboardInfoViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        user = request.user
+        # Total Balance
+        total_balance = user.balance
+        # Total Earned
+        total_earned = Payment.objects.filter(seller=user, status='completed').aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+        # Total Orders
+        total_orders = Order.objects.filter(receiver=user).count()
+        pending_orders = Order.objects.filter(receiver=user, status='pending').count()
+        completed_orders = Order.objects.filter(receiver=user, status='completed').count()
+        cancelled_orders = Order.objects.filter(receiver=user, status='cancel').count()
+        # Total Transactions (Payments + Deposits + Withdraws)
+        payment_count = Payment.objects.filter(Q(buyer=user) | Q(seller=user)).count()
+        deposit_count = Deposit.objects.filter(user=user).count()
+        withdraw_count = Withdraw.objects.filter(user=user).count()
+        total_transactions = payment_count + deposit_count + withdraw_count
+
+        # Total Withdraw
+        total_withdraw = Withdraw.objects.filter(user=user).aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        # Total Deposits
+        total_deposit = Deposit.objects.filter(user=user).aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        # Connected Buyers
+        connected = Connected.objects.filter(user=user).first()
+        connected_buyers = connected.connected_users.count() if connected else 0
+        # Total Disputes
+        total_disputes = Dispute.objects.filter(
+            Q(raised_by=user) | Q(against_user=user)
+        ).count()
+
+        data = {
+            'total_balance': total_balance,
+            'total_earned': total_earned,
+            'total_orders': total_orders,
+            'pending_orders': pending_orders,
+            'completed_orders': completed_orders,
+            'cancelled_orders': cancelled_orders,
+            'total_withdraw': total_withdraw,
+            'total_deposit': total_deposit,
+            'total_transactions': total_transactions,
+            'connected_buyers': connected_buyers,
+            'total_disputes': total_disputes
+        }
+
+        return response.Response(data)
