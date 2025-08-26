@@ -39,7 +39,7 @@ class User(AbstractUser):
         help_text=_("Profile picture"),
     )
     username = models.CharField(
-        max_length=280,
+        max_length=180,
         unique=True,
         db_index=True,
         validators=[
@@ -52,7 +52,7 @@ class User(AbstractUser):
         help_text=_("Unique username"),
     )
     slug = models.SlugField(
-        max_length=280,
+        max_length=180,
         unique=True,
         editable=False,
     )
