@@ -1,27 +1,29 @@
 #!/bin/bash
 set -e
 
-echo "🎨 Step 1: Building React frontend..."
+export $(grep -v '^#' backend/.env.prod | xargs)
+
+echo "🎨 Step 1: Build React frontend..."
 docker-compose -f docker-compose.prod.yml run --rm frontend npm install
 docker-compose -f docker-compose.prod.yml run --rm frontend npm run build
 
-echo "📦 Step 2: Building Docker images..."
+echo "📦 Step 2: Build Docker images..."
 docker-compose -f docker-compose.prod.yml build
 
-echo "🚀 Step 3: Starting containers in detached mode..."
+echo "🚀 Step 3: Start containers..."
 docker-compose -f docker-compose.prod.yml up -d
 
-echo "🧹 Step 4: Cleaning up dangling Docker images..."
+echo "🧹 Step 4: Clean up dangling Docker images..."
 docker image prune -f
 
-echo "📂 Step 5: Running database migrations..."
+echo "📂 Step 5: Database migrations..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py makemigrations --noinput
 docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
 
-echo "📂 Step 6: Running collectstatic..."
+echo "📂 Step 6: Collect static files..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 
-echo "🔑 Step 7: Creating Django superuser (if not exists)..."
+echo "🔑 Step 7: Create Django superuser..."
 docker-compose -f docker-compose.prod.yml exec -T backend python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 import os
@@ -46,10 +48,10 @@ else:
     print("ℹ️ Superuser already exists.")
 EOF
 
-echo "🔍 Step 8: Validating Nginx configuration..."
+echo "🔍 Step 8: Validate Nginx configuration..."
 docker-compose -f docker-compose.prod.yml exec nginx nginx -t
 
-echo "🔁 Step 9: Reloading Nginx gracefully..."
+echo "🔁 Step 9: Reload Nginx gracefully..."
 docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
 
-echo "✅ Production Deployment completed successfully!"
+echo "✅ Production deployment completed successfully!"
