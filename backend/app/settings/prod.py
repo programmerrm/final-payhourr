@@ -49,11 +49,12 @@ CELERY_TIMEZONE = 'Asia/Dhaka'
 
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 
+# ========== CHANNEL LAYERS ==========
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(env('CELERY_BROKER_URL_HOST', 'redis'), 6379)],
+            "hosts": [env('CELERY_BROKER_URL')],
         },
     },
 }
