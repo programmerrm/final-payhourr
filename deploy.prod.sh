@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Load environment variables
 export $(grep -v '^#' backend/.env.prod | xargs)
 
 echo "📦 Step 1: Build Docker images..."
@@ -15,15 +14,16 @@ docker image prune -f
 
 echo "📂 Step 4: Database migrations..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py makemigrations --noinput
-# Skip migrations for tables that already exist
+# ✅ Use --fake-initial to skip migrations for tables that already exist
 docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --fake-initial
 
 echo "📂 Step 5: Collect static files..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 
-echo "🔑 Step 6: Create Django superuser..."
+echo "🔑 Step 7: Create Django superuser..."
 docker-compose -f docker-compose.prod.yml exec -T backend python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
+import os
 
 User = get_user_model()
 username = 'payhourr'
@@ -45,10 +45,10 @@ else:
     print("ℹ️ Superuser already exists.")
 EOF
 
-echo "🔍 Step 7: Validate Nginx configuration..."
+echo "🔍 Step 6: Validate Nginx configuration..."
 docker-compose -f docker-compose.prod.yml exec nginx nginx -t
 
-echo "🔁 Step 8: Reload Nginx gracefully..."
+echo "🔁 Step 7: Reload Nginx gracefully..."
 docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
 
 echo "✅ Production deployment completed successfully!"

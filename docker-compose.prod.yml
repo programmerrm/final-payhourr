@@ -1,9 +1,6 @@
 version: '3.9'
 
 services:
-  # ==========================
-  # FRONTEND
-  # ==========================
   frontend:
     build:
       context: ./frontend
@@ -14,9 +11,6 @@ services:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # BACKEND (Django + Daphne)
-  # ==========================
   backend:
     build:
       context: ./backend
@@ -28,13 +22,9 @@ services:
     depends_on:
       - db
       - redis
-    # Gunicorn বাদ দিয়ে Daphne ব্যবহার
-    command: daphne -b 0.0.0.0 -p 8000 app.asgi:application
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 4
     restart: unless-stopped
 
-  # ==========================
-  # CELERY WORKER
-  # ==========================
   celery:
     build:
       context: ./backend
@@ -49,9 +39,6 @@ services:
     command: celery -A app worker --loglevel=info
     restart: unless-stopped
 
-  # ==========================
-  # CELERY BEAT (Periodic Tasks)
-  # ==========================
   celery-beat:
     build:
       context: ./backend
@@ -66,18 +53,12 @@ services:
     command: celery -A app beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     restart: unless-stopped
 
-  # ==========================
-  # REDIS
-  # ==========================
   redis:
     image: redis:7-alpine
     networks:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # MYSQL DATABASE
-  # ==========================
   db:
     image: mysql:8.1
     env_file:
@@ -93,9 +74,6 @@ services:
       - pngnet
     restart: unless-stopped
 
-  # ==========================
-  # NGINX
-  # ==========================
   nginx:
     image: nginx:1.24-alpine
     ports:
@@ -115,16 +93,10 @@ services:
       - pngnet
     restart: unless-stopped
 
-# ==========================
-# NETWORKS
-# ==========================
 networks:
   pngnet:
     driver: bridge
 
-# ==========================
-# VOLUMES
-# ==========================
 volumes:
   mysql_data:
     driver: local
