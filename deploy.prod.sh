@@ -20,6 +20,31 @@ docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate 
 echo "📂 Step 5: Collect static files..."
 docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 
+echo "🔑 Step 7: Create Django superuser..."
+docker-compose -f docker-compose.prod.yml exec -T backend python manage.py shell <<EOF
+from django.contrib.auth import get_user_model
+import os
+
+User = get_user_model()
+username = 'payhourr'
+email = 'payhourr@gmail.com'
+password = 'payhourr77$'
+first_name = 'Pay'
+last_name = 'Hourr'
+
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(
+        username=username,
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name
+    )
+    print("✅ Superuser created successfully!")
+else:
+    print("ℹ️ Superuser already exists.")
+EOF
+
 echo "🔍 Step 6: Validate Nginx configuration..."
 docker-compose -f docker-compose.prod.yml exec nginx nginx -t
 
