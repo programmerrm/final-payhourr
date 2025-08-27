@@ -40,12 +40,12 @@ export const AdminDashboard: React.FC = () => {
 
                 <div className="grid grid-cols-3 text-center divide-x divide-gray-200 border-t border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition">
                     <div className="p-3">10:15 AM</div>
-                    <div className="p-3">@rahim</div>
+                    <div className="p-3 whitespace-normal break-words">@rahim</div>
                     <div className="p-3">1200৳</div>
                 </div>
-                <div className="grid grid-cols-3 text-center divide-x divide-gray-200 border-t border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition">
+                <div className="grid grid-cols-3 text-center divide-x divide-gray-200 border-t border-b border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition">
                     <div className="p-3">11:40 AM</div>
-                    <div className="p-3">@sajid</div>
+                    <div className="p-3 whitespace-normal break-words">@sajid</div>
                     <div className="p-3">230৳</div>
                 </div>
             </div>
