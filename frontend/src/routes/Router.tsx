@@ -11,7 +11,6 @@ import Transactions from "../components/admin/Transactions";
 import IncomingConnectionRequests from "../components/contributor/IncomingConnectionRequests";
 import WorkCompletedPendingApprovals from "../components/admin/WorkCompletedPendingApprovals";
 import WithdrawRequests from "../components/admin/WithdrawRequests";
-import ManualPaymentReleaseOption from "../components/admin/ManualPaymentReleaseOption";
 import DisputeManagment from "../components/admin/DisputeManagment";
 import Chat from "../components/contributor/chat/Chat";
 import MyWallet from "../components/contributor/MyWallet";
@@ -161,11 +160,6 @@ export const Router = createBrowserRouter([
                         path: 'withdraw-requests/',
                         element: <WithdrawRequests />,
                         handle: { title: "Withdraw Requests" },
-                    },
-                    {
-                        path: 'manual-payment-release-option/',
-                        element: <ManualPaymentReleaseOption />,
-                        handle: { title: "Manual Payment Release Option" },
                     },
                     {
                         path: 'dispute-managment/',

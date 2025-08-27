@@ -79,7 +79,7 @@ export default function DepositRequests() {
                                         {deposit.payment_option || "N/A"}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {deposit.receiver_number}
+                                        {deposit.receiver_number || "N/A"}
                                     </td>
                                     <td className="px-6 py-4 capitalize">
                                         {deposit.status}

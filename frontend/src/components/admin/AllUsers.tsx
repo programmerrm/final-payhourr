@@ -11,8 +11,12 @@ export default function AllUsers() {
 
     const [search, setSearch] = useState<string>("");
     const [page, setPage] = useState(1);
+    const [role, setRole] = useState<string>("");
+    const [isVerify, setIsVerify] = useState<boolean | null>(null);
+    const [isBlock, setIsBlock] = useState<boolean | null>(null);
+
     const { data, isError, isLoading, refetch } = useGetUsersQuery(
-        { search, page },
+        { search, page, role, is_verify: isVerify ?? undefined, is_block: isBlock ?? undefined },
         { refetchOnMountOrArgChange: true }
     );
 
@@ -20,7 +24,6 @@ export default function AllUsers() {
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
     const [addUserDelete, { isLoading: deleting }] = useAddUserDeleteMutation();
 
-    // New state for user details dialog
     const [viewUserId, setViewUserId] = useState<number | null>(null);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,19 +57,17 @@ export default function AllUsers() {
         }
     }
 
-    // Open user detail dialog
     const openViewDialog = (userId: number) => {
         setViewUserId(userId);
     }
 
-    // Close user detail dialog
     const closeViewDialog = () => {
         setViewUserId(null);
     }
 
     return (
         <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner relative">
-            {/* Search Input */}
+            {/* Top bar */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-700 font-medium">Search:</label>
@@ -77,6 +78,65 @@ export default function AllUsers() {
                         placeholder="Type to search..."
                         className="border border-gray-300 px-4 py-2 rounded-md bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2640] w-full"
                     />
+                </div>
+                <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-700 font-medium">Role:</label>
+                    <div className="flex gap-2">
+                        {["", "seller", "buyer"].map((r) => (
+                            <button
+                                key={r || "all"}
+                                onClick={() => { setRole(r); setPage(1); }}
+                                className={`px-3 py-1 rounded-md text-sm font-medium shadow-sm transition relative w-24
+                        ${role === r
+                                        ? "bg-[#1C2640] text-white border-t-4 border-red-500"
+                                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"}`}
+                            >
+                                {r === "" ? "All" : r.charAt(0).toUpperCase() + r.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-700 font-medium">Verify:</label>
+                    <div className="flex gap-2">
+                        {[
+                            { label: "All", value: null },
+                            { label: "Verified", value: true },
+                            { label: "Unverified", value: false }
+                        ].map(({ label, value }) => (
+                            <button
+                                key={label}
+                                onClick={() => { setIsVerify(value); setPage(1); }}
+                                className={`px-3 py-1 rounded-md text-sm font-medium shadow-sm transition relative w-24
+                        ${isVerify === value
+                                        ? "bg-[#1C2640] text-white border-t-4 border-red-500"
+                                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"}`}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-700 font-medium">Status:</label>
+                    <div className="flex gap-2">
+                        {[
+                            { label: "All", value: null },
+                            { label: "Active", value: false },
+                            { label: "Blocked", value: true }
+                        ].map(({ label, value }) => (
+                            <button
+                                key={label}
+                                onClick={() => { setIsBlock(value); setPage(1); }}
+                                className={`px-3 py-1 rounded-md text-sm font-medium shadow-sm transition relative w-24
+                        ${isBlock === value
+                                        ? "bg-[#1C2640] text-white border-t-4 border-red-500"
+                                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"}`}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -168,18 +228,18 @@ export default function AllUsers() {
                     </tbody>
                 </table>
             </div>
-            
-            {/* Pagination */}      
-            <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
-
+            {/* Pagination */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setPage={setPage}
+            />
             <UserDeleteDialog
                 showConfirm={showConfirm}
                 deleting={deleting}
                 closeConfirmDialog={closeConfirmDialog}
                 handleDeleteConfirm={handleDeleteConfirm}
             />
-
-            {/* Pass userId and close handler */}
             {viewUserId !== null && (
                 <UserShowDialog userId={viewUserId} onClose={closeViewDialog} />
             )}

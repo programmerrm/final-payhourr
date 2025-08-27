@@ -50,6 +50,7 @@ export const BuyerDashboard: React.FC = () => {
                         <p className="mt-2 text-base lg:text-xl font-extrabold text-indigo-600">{buyerdata?.total_disputes || 0}</p>
                     </Link>
                 </div>
+                
                 <div className="w-auto border border-gray-300 rounded-2xl shadow-md bg-white shrink-0 flex flex-col overflow-scroll scrollbar-hidden">
                     <h2 className="p-4 border-b border-gray-300 text-xl font-bold text-center text-black bg-gray-100 rounded-t-2xl">Network Updates</h2>
                     <div className="grid grid-cols-4 text-center divide-x divide-gray-300 bg-white font-semibold text-sm text-gray-700">

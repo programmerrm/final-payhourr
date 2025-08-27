@@ -97,11 +97,6 @@ export const AdminMenu = [
     },
     {
         id: 8,
-        name: 'Manual Payment Release Option',
-        path: '/manual-payment-release-option/',
-    },
-    {
-        id: 9,
         name: 'Dispute Managment',
         path: '/dispute-managment/',
     },

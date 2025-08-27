@@ -19,7 +19,7 @@ export default function DisputeManagment() {
         { search, page },
         { refetchOnMountOrArgChange: true }
     );
-    const { LuMessageCircleMore } = ReactIcons;
+    const { LuMessageCircleMore, FaRegEdit } = ReactIcons;
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -39,6 +39,7 @@ export default function DisputeManagment() {
 
     return (
         <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner">
+
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2 text-sm">
                     <span className="text-gray-700 text-base md:text-2xl font-medium">Dispute History</span>
@@ -61,8 +62,8 @@ export default function DisputeManagment() {
                         <tr>
                             <th className="px-6 py-4">Photo</th>
                             <th className="px-6 py-4">Username</th>
-                            <th className="px-6 py-4">Subject</th>
-                            <th className="px-6 py-4">Rating</th>
+                            <th className="px-6 py-4">Title</th>
+                            <th className="px-6 py-4">Type</th>
                             <th className="px-6 py-4">Join Message</th>
                             <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4">Update</th>
@@ -93,16 +94,24 @@ export default function DisputeManagment() {
                         {!isLoading &&
                             data?.data?.map((dispute: any) => (
                                 <tr key={dispute.id} className="hover:bg-gray-100 transition">
-                                    <td className="px-6 py-4 font-medium text-gray-900">{dispute.id}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-900">
+                                        {dispute.raised_by?.image ? (
+                                            <img className="w-10 h-10 rounded-full object-cover" src={dispute.raised_by?.image} alt={dispute.raised_by?.username} />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mx-auto">
+                                                {dispute.raised_by?.username?.[0]?.toUpperCase() || "?"}
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4">@{dispute.raised_by?.username || "-"}</td>
-                                    <td className="px-6 py-4">{dispute.subject}</td>
-                                    <td className="px-6 py-4">5</td>
+                                    <td className="px-6 py-4">{dispute.title}</td>
+                                    <td className="px-6 py-4">{dispute.type}</td>
                                     <td className="px-6 py-4 font-bold text-blue-600">
                                         <button
                                             type="button"
                                             onClick={() => navigate(`/dashboard/${currentUsername}/admin/chat/${(dispute.room_name)}/`)}
                                         >
-                                            <LuMessageCircleMore className="text-3xl text-black/60" />
+                                            <LuMessageCircleMore className="text-3xl text-green-500" />
                                         </button>
                                     </td>
                                     <td className="px-6 py-4 capitalize">{dispute.status}</td>
@@ -112,7 +121,7 @@ export default function DisputeManagment() {
                                             onClick={() => handleDisputeShow(dispute.id)}
                                             aria-label={`View dispute ${dispute.id}`}
                                         >
-                                            Edit
+                                            <FaRegEdit className="text-2xl" />
                                         </button>
                                     </td>
                                 </tr>

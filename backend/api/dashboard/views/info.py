@@ -3,6 +3,7 @@ from django.db.models import Sum, Q
 from orders.models import Order
 from chat.models import Connected, Dispute
 from payments.models import Deposit, Withdraw, Payment
+from django.contrib.auth import get_user_model
 
 class BuyerDashboardInfoViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -33,9 +34,8 @@ class BuyerDashboardInfoViewSet(viewsets.ViewSet):
 
         # Total deposits
         total_deposit = Deposit.objects.filter(user=user).aggregate(
-    total=Sum('amount')
-)['total'] or 0
-
+            total=Sum('amount')
+        )['total'] or 0
 
         # Connected Sellers
         connected = Connected.objects.filter(user=user).first()
@@ -116,3 +116,52 @@ class SellerDashboardInfoViewSet(viewsets.ViewSet):
         }
 
         return response.Response(data)
+
+class AdminDashboardInfoViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAdminUser]
+
+    def list(self, request):
+        User = get_user_model()
+
+        # Total Users
+        total_users = User.objects.filter(is_superuser=False, is_staff=False).count()
+        total_buyers = User.objects.filter(role='buyer', is_superuser=False, is_staff=False).count()
+        total_sellers = User.objects.filter(role='seller', is_superuser=False, is_staff=False).count()
+
+        # Total Orders
+        total_orders = Order.objects.count()
+        pending_orders = Order.objects.filter(status='pending').count()
+        completed_orders = Order.objects.filter(status='completed').count()
+        cancelled_orders = Order.objects.filter(status='cancel').count()
+
+        # Total Transactions (Payments + Deposits + Withdraws)
+        payment_count = Payment.objects.count()
+        deposit_count = Deposit.objects.count()
+        withdraw_count = Withdraw.objects.count()
+        total_transactions = payment_count + deposit_count + withdraw_count
+
+        # Total Withdraw
+        total_withdraw = Withdraw.objects.aggregate(total=Sum('amount'))['total'] or 0
+
+        # Total Deposits
+        total_deposit = Deposit.objects.aggregate(total=Sum('amount'))['total'] or 0
+
+        # Total Disputes
+        total_disputes = Dispute.objects.count()
+
+        data = {
+            'total_users': total_users,
+            'total_buyers': total_buyers,
+            'total_sellers': total_sellers,
+            'total_orders': total_orders,
+            'pending_orders': pending_orders,
+            'completed_orders': completed_orders,
+            'cancelled_orders': cancelled_orders,
+            'total_withdraw': total_withdraw,
+            'total_deposit': total_deposit,
+            'total_transactions': total_transactions,
+            'total_disputes': total_disputes
+        }
+
+        return response.Response(data)
+    

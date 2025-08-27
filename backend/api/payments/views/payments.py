@@ -5,6 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from permissions.admin import IsAdminUser
 from permissions.user import IsSellerOrBuyer
+from rest_framework.permissions import IsAuthenticated
 
 from api.payments.serializers.payments import DepositHistorySerializer, WithdrawHistorySerializer
 from api.payments.paginators.paginators import PaymentHistoryPagination, CombinedTransactionPagination
@@ -102,7 +103,7 @@ class BalanceView(RetrieveAPIView):
     permission_classes = [IsSellerOrBuyer]
 
 class AllTransactionsViewSet(viewsets.ViewSet):
-    permission_classes = [IsSellerOrBuyer]
+    permission_classes = [IsAuthenticated]
     pagination_class = CombinedTransactionPagination
 
     def list(self, request):

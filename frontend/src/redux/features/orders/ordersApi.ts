@@ -24,6 +24,9 @@ const ordersApi = apiSlice.injectEndpoints({
             }),
         }),
 
+        getAllOrders: builder.query<any, { search?: string; page?: number }>({
+            query: ({ search = '', page = 1 }) => `/orders/all/?search=${search}&page=${page}`,
+        }),
         getSingleOrder: builder.query<any, number>({
             query: (id) => `/orders/single-order/${id}/`,
         }),
@@ -41,6 +44,7 @@ export const {
     useAddOrderCreateMutation,
     useAddOrderUpdateMutation,
 
+    useGetAllOrdersQuery,
     useGetReciverOrderQuery,
     useGetOrdersQuery,
     useGetSingleOrderQuery,

@@ -8,10 +8,14 @@ const dashboardApi = apiSlice.injectEndpoints({
         getSellerDashboardInfo: builder.query<any, void>({
             query: () => '/dashboard/seller-info/',
         }),
+        getAdminDashboardInfo: builder.query<any, void>({
+            query: () => '/dashboard/admin-info/',
+        }),
     }),
 });
 
 export const {
     useGetBuyerDashboardInfoQuery,
     useGetSellerDashboardInfoQuery,
+    useGetAdminDashboardInfoQuery,
 } = dashboardApi;

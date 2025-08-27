@@ -94,8 +94,6 @@ export default function Order() {
                 totalPages={totalPages}
                 setPage={setPage}
             />
-
-            {/* ✅ Modal */}
             <OrderModel orderId={selected} onClose={() => setSelected(null)} />
         </div>
     );

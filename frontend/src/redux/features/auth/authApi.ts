@@ -49,9 +49,14 @@ export const authApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        getUsers: builder.query<any, { search?: string; page?: number }>({
-            query: ({ search = '', page = 1 }) =>
-                `/accounts/users/?search=${search}&page=${page}`,
+        getUsers: builder.query<any, { search?: string; page?: number; role?: string; is_verify?: boolean; is_block?: boolean }>({
+            query: ({ search = '', page = 1, role = '', is_verify, is_block }) => {
+                let queryString = `/accounts/users/?search=${search}&page=${page}`;
+                if (role) queryString += `&role=${role}`;
+                if (typeof is_verify === 'boolean') queryString += `&is_verify=${is_verify}`;
+                if (typeof is_block === 'boolean') queryString += `&is_block=${is_block}`;
+                return queryString;
+            },
         }),
         addUserDelete: builder.mutation({
             query: (data) => ({

@@ -1,8 +1,24 @@
 version: '3.9'
 
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+    command: npm run dev
+    restart: unless-stopped
   backend:
-    container_name: backend-dev
+    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile.dev

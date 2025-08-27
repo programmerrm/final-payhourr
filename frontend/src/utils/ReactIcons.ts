@@ -1,5 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible, AiOutlineClose } from "react-icons/ai";
-import { FaCloudUploadAlt, FaBorderAll, FaNetworkWired } from "react-icons/fa";
+import { FaCloudUploadAlt, FaBorderAll, FaNetworkWired, FaRegEdit } from "react-icons/fa";
 import { FaFacebook, FaInstagram, FaLinkedin, FaCircleUser, FaWallet } from "react-icons/fa6";
 import { IoMdAdd, IoMdClose, IoMdEye, IoMdEyeOff, IoMdInformationCircle, IoMdSend, IoIosLogOut } from "react-icons/io";
 import { IoCloseSharp, IoSearchOutline, IoSettings, IoNotifications, IoClose } from "react-icons/io5";
@@ -11,6 +11,7 @@ import { BiGitPullRequest } from "react-icons/bi";
 import { MdManageAccounts } from "react-icons/md";
 
 export const ReactIcons = {
+  FaRegEdit,
   MdManageAccounts,
   MdReport,
   BiGitPullRequest,
