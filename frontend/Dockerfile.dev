@@ -1,20 +1,24 @@
-# Use official Node.js 22 image
+################################################################
+######### REACT JS DEVELOPMENT DOCKERFILE CONFIGRATION #########
+################################################################
+
+# USE OFFICIAL NODE.JS 22 IMAGE
 FROM node:22
 
-# Set working directory inside the container
+# SET WORKING DIRECTORY INSIDE THE CONTAINER
 WORKDIR /app/frontend
 
-# Copy package.json and package-lock.json for caching dependencies
-COPY package.json package-lock.json* ./
+# COPY PACKAGE.JSON AND PACKAGE-LOCK.JSON TO THE WORKING DIRECTORY
+COPY package*.json ./
 
-# Install all dependencies
+# INSTALL NPM DEPENDENCIES
 RUN npm install
 
-# Copy the rest of the application source code
+# COPY REMAINING APPLICATION FILES
 COPY . ./
 
-# Expose port where the dev server will run
+# EXPOSE PORT 3001
 EXPOSE 3001
 
-# Start the React development server
+# START REACT DEVELOPMENT SERVER
 CMD ["npm", "run", "dev"]

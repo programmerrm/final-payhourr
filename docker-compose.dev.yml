@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   frontend:
-    container_name: frontend
+    container_name: frontend-dev
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
@@ -13,12 +13,15 @@ services:
       - ./frontend/.env
     ports:
       - "3001:3001"
+    networks:
+      - devnet
     depends_on:
       - backend
     command: npm run dev
     restart: unless-stopped
+
   backend:
-    container_name: backend
+    container_name: backend-dev
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
@@ -28,9 +31,15 @@ services:
       - ./backend/.env.dev
     ports:
       - "8000:8000"
+    networks:
+      - devnet
     depends_on:
       - redis
-    command: daphne app.asgi:application --port 8000 --bind 0.0.0.0
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      daphne -p 8000 -b 0.0.0.0 app.asgi:application
+      "
     restart: unless-stopped
 
   redis:
@@ -38,6 +47,8 @@ services:
     image: redis:6.2-alpine
     ports:
       - "6379:6379"
+    networks:
+      - devnet
     restart: unless-stopped
 
   celery:
@@ -50,6 +61,8 @@ services:
       - ./backend:/app/backend
     env_file:
       - ./backend/.env.dev
+    networks:
+      - devnet
     depends_on:
       - backend
       - redis
@@ -65,7 +78,13 @@ services:
       - ./backend:/app/backend
     env_file:
       - ./backend/.env.dev
+    networks:
+      - devnet
     depends_on:
       - backend
       - redis
     restart: unless-stopped
+
+networks:
+  devnet:
+    driver: bridge

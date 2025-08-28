@@ -1,9 +1,15 @@
-# Python base image
+#############################################################################
+######### DJANGO REST FRAMEWORK DEVELOPMENT DOCKERFILE CONFIGURATION #########
+#############################################################################
+
+# PYTHON 3.11 SLIM IMAGE
 FROM python:3.11-slim
 
+# PYTHON ENVIRONMENT VARIABLES
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# SET WORKING DIRECTORY INSIDE THE CONTAINER
 WORKDIR /app/backend
 
 RUN apt-get update && apt-get install -y \
@@ -12,13 +18,18 @@ RUN apt-get update && apt-get install -y \
     curl \
     netcat-openbsd \
     libsqlite3-dev \
-    && apt-get clean
+    pkg-config \
+    default-libmysqlclient-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# COPY REQUIREMENTS.TXT
 COPY requirements.txt ./
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
+# ADDITIONAL PYTHON PACKAGES
 RUN pip install \
     daphne \
     watchfiles \
@@ -26,8 +37,11 @@ RUN pip install \
     django-celery-beat \
     redis
 
+# COPY APPLICATION CODE
 COPY . ./
 
+# EXPOSE PORT 8000
 EXPOSE 8000
 
+# START ASGI APP WITH DAPHNE SERVER
 CMD ["daphne", "-p", "8000", "-b", "0.0.0.0", "app.asgi:application"]

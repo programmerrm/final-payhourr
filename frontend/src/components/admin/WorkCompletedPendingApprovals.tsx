@@ -11,7 +11,7 @@ export default function WorkCompletedPendingApprovals() {
     const { data } = useGetAllOrdersQuery(
         { search, page },
         { refetchOnMountOrArgChange: true }
-    )
+    );
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
