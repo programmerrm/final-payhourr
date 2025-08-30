@@ -7,10 +7,12 @@ from permissions.or_permission import IsRegularOrAdminUser
 from api.orders.serializers.order import OrderSerializer
 from api.orders.filters.filters import OrdersFilter
 from api.orders.paginators.paginators import OrdersPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsSellerOrBuyer]
+    filter_backends = [DjangoFilterBackend]
     filterset_class = OrdersFilter
     pagination_class = OrdersPagination
 
@@ -18,6 +20,13 @@ class OrderViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return Order.objects.filter(sender=user) | Order.objects.filter(receiver=user)
     
+
+
+
+
+
+
+
 class SingleOrderViewSet(viewsets.ViewSet):
     permission_classes = [IsRegularOrAdminUser]
 

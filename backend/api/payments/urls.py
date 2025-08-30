@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from api.payments.views.payments import PaymentViewSet, WithdrawViewSet, DepositViewSet, PaymentHistoryView, BalanceView, TotalDepositAndWithdrawCountView, AllTransactionsViewSet
+from api.payments.views.payments import PaymentViewSet, WithdrawViewSet, DepositViewSet, PaymentHistoryView, TotalDepositAndWithdrawCountView, AllTransactionsViewSet
 from api.payments.views.sslcommerz import InitPaymentView
 
 router = DefaultRouter()
@@ -14,11 +14,6 @@ urlpatterns = [
         'history/',
         PaymentHistoryView.as_view(), 
         name='payment-history',
-    ),
-    path(
-        'balance/', 
-        BalanceView.as_view(), 
-        name='user-balance',
     ),
     path(
         'counts/', 

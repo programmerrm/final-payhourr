@@ -1,26 +1,21 @@
 from rest_framework import viewsets
-from payments.models import Payment, Withdraw, Deposit
-from api.payments.serializers.payments import PaymentSerializer, WithdrawSerializer, DepositSerializer
-from rest_framework.generics import GenericAPIView
+from django.db.models import Q
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from permissions.admin import IsAdminUser
+from rest_framework.generics import GenericAPIView
 from permissions.user import IsSellerOrBuyer
 from rest_framework.permissions import IsAuthenticated
-
-from api.payments.serializers.payments import DepositHistorySerializer, WithdrawHistorySerializer
-from api.payments.paginators.paginators import PaymentHistoryPagination, CombinedTransactionPagination
-from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView
-from api.payments.serializers.payments import BalanceSerializer
-
-from api.payments.filters.filters import DepositFilter, WithdrawFilter
-from api.payments.paginators.paginators import DepositPagination, WithdrawPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
+from payments.models import Payment, Withdraw, Deposit
+from api.payments.serializers.payments import PaymentSerializer, WithdrawSerializer, DepositSerializer
+from api.payments.serializers.payments import DepositHistorySerializer, WithdrawHistorySerializer
+from api.payments.filters.filters import DepositFilter, WithdrawFilter, PaymentFilter
+from api.payments.paginators.paginators import PaymentHistoryPagination, CombinedTransactionPagination, DepositPagination, WithdrawPagination
 
+# DEPOSIT ADMIN ROLE ALL DEPOSITE ACCESS AND INDIVIDUAL USER ACCESS
 class DepositViewSet(viewsets.ModelViewSet):
     serializer_class = DepositSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = DepositFilter
     pagination_class = DepositPagination
@@ -34,9 +29,10 @@ class DepositViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+# WITHDRAW ADMIN ROLE ALL WITHDRAW ACCESS AND INDIVIDUAL USER ACCESS
 class WithdrawViewSet(viewsets.ModelViewSet):
     serializer_class = WithdrawSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = WithdrawFilter
     pagination_class = WithdrawPagination
@@ -50,31 +46,13 @@ class WithdrawViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class PaymentHistoryView(GenericAPIView):
-    permission_classes = [IsSellerOrBuyer]
-    pagination_class = PaymentHistoryPagination
-
-    def get(self, request):
-        user = request.user
-        deposits = Deposit.objects.filter(user=user)
-        withdraws = Withdraw.objects.filter(user=user)
-
-        deposit_data = DepositHistorySerializer(deposits, many=True).data
-        withdraw_data = WithdrawHistorySerializer(withdraws, many=True).data
-
-        # Combine and sort all records by created_at (descending)
-        combined = sorted(deposit_data + withdraw_data, key=lambda x: x['created_at'], reverse=True)
-
-        # Paginate combined data
-        page = self.paginate_queryset(combined)
-        if page is not None:
-            return self.get_paginated_response(page)
-
-        return Response(combined)
-
+# PAYMENT ADMIN ROLE ALL PAYMENT ACCESS AND INDIVIDUAL USER ACCESS
 class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PaymentFilter
+    pagination_class = PaymentHistoryPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -85,6 +63,35 @@ class PaymentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(buyer=self.request.user)
 
+# PAYMENT HISTORY VIEW
+class PaymentHistoryView(GenericAPIView):
+    permission_classes = [IsSellerOrBuyer]
+    filter_backends = [DjangoFilterBackend]
+    pagination_class = PaymentHistoryPagination
+
+    def get(self, request):
+        user = request.user
+        status = request.query_params.get("status")
+
+        deposits = Deposit.objects.filter(user=user)
+        withdraws = Withdraw.objects.filter(user=user)
+        if status:
+            deposits = deposits.filter(status=status)
+            withdraws = withdraws.filter(status=status)
+        deposit_data = DepositHistorySerializer(deposits, many=True).data
+        withdraw_data = WithdrawHistorySerializer(withdraws, many=True).data
+        combined = sorted(
+            deposit_data + withdraw_data,
+            key=lambda x: x['created_at'],
+            reverse=True
+        )
+        page = self.paginate_queryset(combined)
+        if page is not None:
+            return self.get_paginated_response(page)
+
+        return Response(combined)
+
+# TOTAL DEPOSIT AND WITHDRAW COUNT VIEW
 class TotalDepositAndWithdrawCountView(APIView):
     permission_classes = [IsSellerOrBuyer]
 
@@ -98,10 +105,7 @@ class TotalDepositAndWithdrawCountView(APIView):
             "withdraw_count": withdraw_count,
         })
 
-class BalanceView(RetrieveAPIView):
-    serializer_class = BalanceSerializer
-    permission_classes = [IsSellerOrBuyer]
-
+# ALL TRANSACTIONS VIEW
 class AllTransactionsViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     pagination_class = CombinedTransactionPagination

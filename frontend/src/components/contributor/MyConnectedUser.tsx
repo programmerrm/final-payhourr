@@ -25,7 +25,7 @@ export default function MyConnectedUser() {
         { refetchOnMountOrArgChange: true }
     );
 
-    const { LuMessageCircleMore, MdSyncProblem, IoMdClose } = ReactIcons;
+    const { LuMessageCircleMore, IoMdClose, BiSupport } = ReactIcons;
 
     const socketUrl = `${SOCKET_URL}/online-status/`;
 
@@ -94,7 +94,7 @@ export default function MyConnectedUser() {
                             <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4">Message</th>
                             <th className="px-6 py-4">Payment</th>
-                            <th className="px-6 py-4">Dispute</th>
+                            <th className="px-6 py-4">Support</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 text-gray-700">
@@ -131,16 +131,20 @@ export default function MyConnectedUser() {
                                                 navigate(`/dashboard/${currentUsername}/chat/${generateRoomName(user.username)}/`)
                                             }
                                         >
-                                            <LuMessageCircleMore className="text-3xl text-black/60" />
+                                            <LuMessageCircleMore className="text-3xl text-green-700" />
                                         </button>
                                     </td>
-                                    <td className="px-6 py-4">48</td>
+                                    <td className="px-6 py-4">
+                                        <button className="bg-green-700 text-white px-5 py-2.5 rounded" type="button">
+                                            $ Pay Now
+                                        </button>
+                                    </td>
                                     <td className="px-6 py-4">
                                         <button
                                             type="button"
                                             onClick={() => openDispute(generateRoomName(user.username))}
                                         >
-                                            <MdSyncProblem className="text-3xl" />
+                                            <BiSupport className="text-3xl text-red-700" />
                                         </button>
                                     </td>
                                 </tr>

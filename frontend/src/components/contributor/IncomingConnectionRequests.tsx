@@ -8,6 +8,7 @@ import {
 } from "../../redux/features/chat/connectionRequests";
 import { MEDIA_URL } from "../../utils/Api";
 import { toast } from "react-toastify";
+import { AgainstUserModel } from "../modals/AgainstUserModel";
 
 type User = {
     id: number;
@@ -32,6 +33,7 @@ export default function IncomingConnectionRequests() {
 
     const [search, setSearch] = useState<string>("");
     const [page, setPage] = useState<number>(1);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
     const { data, refetch } = useGetConnectionRequesQuery(
         { search: search || state?.search || "", page },
@@ -118,7 +120,7 @@ export default function IncomingConnectionRequests() {
                             <th className="px-6 py-4">Username</th>
                             <th className="px-6 py-4">Email</th>
                             <th className="px-6 py-4">Phone Number</th>
-                            <th className="px-6 py-4">Role</th>
+                            <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4">Add</th>
                             <th className="px-6 py-4">Delete</th>
                         </tr>
@@ -133,7 +135,7 @@ export default function IncomingConnectionRequests() {
                         ) : (
                             senders.map(({ id, user }) => (
                                 <tr key={`${id}-${user.id}`} className="hover:bg-gray-100 transition">
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 cursor-pointer" onClick={() => setSelectedUserId(user.id)}>
                                         {user.image ? (
                                             <img
                                                 src={`${MEDIA_URL}${user.image}`}
@@ -148,23 +150,23 @@ export default function IncomingConnectionRequests() {
                                     </td>
                                     <td className="px-6 py-4 font-medium text-gray-900">{user.user_id}</td>
                                     <td className="px-6 py-4">@{user.username}</td>
-                                    <td className="px-6 py-4">{user.email}</td>
-                                    <td className="px-6 py-4">{user.number}</td>
-                                    <td className="px-6 py-4 font-bold text-blue-600">{user.role}</td>
+                                    <td className="px-6 py-4">***********@gmail.com</td>
+                                    <td className="px-6 py-4">+8801*********</td>
+                                    <td className="px-6 py-4 font-bold text-gray-400 capitalize">Offline</td>
                                     <td className="px-6 py-4">
                                         <button
                                             onClick={() => handleAdd(user.user_id)}
-                                            className="text-blue-600 hover:underline"
+                                            className="text-white bg-green-700 py-2.5 px-5 rounded hover:underline"
                                         >
-                                            Add
+                                            Accept
                                         </button>
                                     </td>
                                     <td className="px-6 py-4">
                                         <button
                                             onClick={() => handleDelete(user.user_id)}
-                                            className="text-red-600 hover:underline"
+                                            className="text-white bg-red-700 py-2.5 px-5 rounded hover:underline"
                                         >
-                                            Delete
+                                            Reject
                                         </button>
                                     </td>
                                 </tr>
@@ -173,11 +175,17 @@ export default function IncomingConnectionRequests() {
                     </tbody>
                 </table>
             </div>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                setPage={setPage}
-            />
+            <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
+
+            {/* Modal for selected user */}
+            {selectedUserId && (
+                <div className="flex items-center justify-center bg-gray-50">
+                    <AgainstUserModel
+                        userId={selectedUserId}
+                        onClose={() => setSelectedUserId(null)}
+                    />
+                </div>
+            )}
         </div>
     );
 }

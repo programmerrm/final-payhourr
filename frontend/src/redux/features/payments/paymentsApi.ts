@@ -70,8 +70,14 @@ const paymentsApi = apiSlice.injectEndpoints({
         getAllTransaction: builder.query<any, { search?: string; page?: number }>({
             query: ({ search = '', page = 1 }) => `/payments/all-transactions/?search=${search}&page=${page}`,
         }),
-        getPaymentHistory: builder.query<any, { page?: number }>({
-            query: ({ page = 1 }) => `/payments/history/?page=${page}`,
+        getPaymentHistory: builder.query<any, { page?: number; status?: string; start_date?: string; end_date?: string }>({
+            query: ({ page = 1, status, start_date, end_date }) => {
+                let url = `/payments/history/?page=${page}`;
+                if (status) url += `&status=${status}`;
+                if (start_date) url += `&start_date=${start_date}`;
+                if (end_date) url += `&end_date=${end_date}`;
+                return url;
+            },
         }),
         getBalance: builder.query<any, void>({
             query: () => '/payments/balance/'

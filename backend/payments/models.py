@@ -24,38 +24,54 @@ class Deposit(models.Model):
         max_digits=12, 
         decimal_places=2,
     )
+    number = models.CharField(
+        max_length=80,
+        null=True,
+        blank=True,
+    )
     transaction_id = models.CharField(
         max_length=255
     )
     status = models.CharField(
         max_length=10, 
         choices=STATUS_CHOICES, 
-        default=STATUS_PENDING
+        default=STATUS_APPROVED
     )
     created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
         auto_now_add=True
     )
 
     def save(self, *args, **kwargs):
         with transaction.atomic():
+
             if self.pk:
+
                 old = Deposit.objects.select_for_update().get(pk=self.pk)
+
                 if old.status != self.status:
+
                     if old.status != self.STATUS_APPROVED and self.status == self.STATUS_APPROVED:
                         self.user.balance = models.F('balance') + self.amount
-                        self.user.save(update_fields=['balance'])
+
                     elif old.status == self.STATUS_APPROVED and self.status != self.STATUS_APPROVED:
                         self.user.balance = models.F('balance') - self.amount
-                        self.user.save(update_fields=['balance'])
+                        
+                    self.user.save(update_fields=['balance'])
+
             else:
                 if self.status == self.STATUS_APPROVED:
                     self.user.balance = models.F('balance') + self.amount
                     self.user.save(update_fields=['balance'])
 
+
             super().save(*args, **kwargs)
 
+
     def __str__(self):
-        return f"Deposit by {self.user.username}: {self.amount} ({self.status})"
+        return f"Deposit by {self.user.username} : {self.amount} ({self.status})"
 
 class Withdraw(models.Model):
     STATUS_PENDING = 'pending'
@@ -109,7 +125,6 @@ class Withdraw(models.Model):
 
     def __str__(self):
         return f"Withdraw by {self.user.username}: {self.amount} ({self.status})"
-
 
 class Payment(models.Model):
     STATUS_PENDING = 'pending'

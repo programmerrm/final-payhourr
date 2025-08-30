@@ -21,9 +21,8 @@ export const OrderModel: React.FC<OrderModelProps> = ({ orderId, onClose }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                 >
-                    {/* Modal content */}
                     <motion.div
-                        className="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full"
+                        className="bg-white rounded-2xl shadow-2xl p-6 max-w-3xl w-full"
                         initial={{ scale: 0.8, opacity: 0, y: 50 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -45,11 +44,34 @@ export const OrderModel: React.FC<OrderModelProps> = ({ orderId, onClose }) => {
                             <p className="text-center text-gray-500">Loading...</p>
                         ) : data ? (
                             <div className="space-y-2 text-gray-700">
-                                <p><span className="font-medium">Order ID:</span> {data?.data.order_id}</p>
-                                <p><span className="font-medium">Title:</span> {data?.data.title}</p>
-                                <p><span className="font-medium">Amount:</span> ${data?.data.amount}</p>
                                 <p><span className="font-medium">Sender:</span> @{data?.data.sender.username}</p>
                                 <p><span className="font-medium">Receiver:</span> @{data?.data.receiver.username}</p>
+                                <p><span className="font-medium">Order ID:</span> {data?.data.order_id}</p>
+                                <p><span className="font-medium">Title:</span> {data?.data.title}</p>
+                                <p><span className="font-medium">Amount:</span> {data?.data.amount}</p>
+                                <p><span className="font-medium">Requirement:</span> {data?.data.requirement}</p>
+                                {data?.data?.reference_file && (
+                                    <div>
+                                        <span className="font-medium">Reference File:</span>
+                                        <img src={data?.data?.reference_file} alt="reference_file" />
+                                    </div>
+                                )}
+                                <p>
+                                    <span className="font-medium">Delivery Time:</span>{" "}
+                                    {new Intl.DateTimeFormat("en-GB", {
+                                        timeZone: "Asia/Dhaka",
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        second: "2-digit",
+                                        hour12: true,
+                                    })
+                                        .format(new Date(data?.data.delivery_time))
+                                        .replace("am", "AM")
+                                        .replace("pm", "PM")}
+                                </p>
                                 <p><span className="font-medium">Status:</span> {data?.data.status}</p>
                                 <p><span className="font-medium">Approved:</span> {data?.data.is_approved ? "Yes" : "No"}</p>
                             </div>

@@ -43,6 +43,9 @@ export const DisputeShow: React.FC<DisputeShowProps> = ({ id, onClose, refetch }
         }
     };
 
+
+    console.log("data : ", data);
+
     return (
         <AnimatePresence>
             {data && (
@@ -57,7 +60,7 @@ export const DisputeShow: React.FC<DisputeShowProps> = ({ id, onClose, refetch }
                     transition={{ duration: 0.25 }}
                 >
                     <motion.div
-                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full sm:max-w-lg md:max-w-xl p-2.5 py-4 md:p-8 relative"
+                        className="bg-white rounded-2xl shadow-2xl max-w-md w-full sm:max-w-lg md:max-w-3xl p-2.5 py-4 md:p-8 relative h-[90%] overflow-x-hidden overflow-y-scroll pb-5 scrollbar-hidden"
                         onClick={(e) => e.stopPropagation()}
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -88,7 +91,7 @@ export const DisputeShow: React.FC<DisputeShowProps> = ({ id, onClose, refetch }
                         {data && (
                             <div className="space-y-5 text-gray-700">
                                 <div className="flex flex-col sm:flex-row sm:justify-between">
-                                    <span className="text-sm md:text-lg font-semibold text-gray-900">Raised By:</span>
+                                    <span className="text-sm md:text-lg font-semibold text-gray-900">Creator User:</span>
                                     <span className="text-sm md:text-lg mt-1 sm:mt-0">{data.raised_by?.username || "N/A"}</span>
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:justify-between">
@@ -100,10 +103,29 @@ export const DisputeShow: React.FC<DisputeShowProps> = ({ id, onClose, refetch }
                                     <p className="text-sm md:text-lg mt-1 whitespace-pre-wrap">{data.title}</p>
                                 </div>
                                 <div>
+                                    <span className="text-sm md:text-lg font-semibold text-gray-900">Type : </span>
+                                    <p className="text-sm md:text-lg mt-1 whitespace-pre-wrap">{data.type}</p>
+                                </div>
+                                <div>
                                     <span className="text-sm md:text-lg font-semibold text-gray-900">Description:</span>
                                     <p className="text-sm md:text-lg mt-1 whitespace-pre-wrap">{data.description}</p>
                                 </div>
-                                
+
+                                {data.solution && (
+                                    <div className="flex flex-col flex-wrap gap-y-0.5">
+                                        <span className="text-sm md:text-lg font-semibold text-gray-900">Solution:</span>
+                                        <p className="text-sm md:text-lg mt-1 whitespace-pre-wrap">{data.solution}</p>
+                                    </div>
+                                )}
+
+                                {data.attach_proof && (
+                                    <div className="flex flex-col flex-wrap gap-y-0.5">
+                                        <span className="text-sm md:text-lg font-semibold text-gray-900">Attach Proof:</span>
+                                        <img src={data.attach_proof} alt="Attachment Proof" />
+                                    </div>
+                                )}
+
+
                                 <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2">
                                     <span className="text-sm md:text-lg font-semibold text-gray-900">Status:</span>
                                     {isAdmin ? (

@@ -203,9 +203,9 @@ export const Router = createBrowserRouter([
                         handle: { title: 'Order' },
                     },
                     {
-                        path: 'dispute/',
+                        path: 'support/',
                         element: <Dispute />,
-                        handle: { title: 'Dispute' },
+                        handle: { title: 'Support' },
                     },
                     {
                         path: 'payment-success/:slug',

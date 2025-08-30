@@ -6,7 +6,6 @@ Order Model Create
 from django.db import models
 from django.contrib.auth import get_user_model
 from decimal import Decimal
-from orders.utils import ORDER_STATUS
 
 User = get_user_model()
 
@@ -15,6 +14,17 @@ class Order(models.Model):
     Represents an order between a sender (buyer) and receiver (seller).
     Supports delivery time extension requests and payment handling.
     """
+
+    STATUS_PENDING = 'pending'
+    STATUS_COMPLETED = 'completed'
+    STATUS_CANCELLED = 'cancelled'
+
+    STATUS_CHOICES = (
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_COMPLETED, 'Completed'),
+        (STATUS_CANCELLED, 'Cancelled'),
+    )
+
     order_id = models.CharField(
         max_length=10,
         unique=True, 
@@ -67,7 +77,7 @@ class Order(models.Model):
 
     status = models.CharField(
         max_length=20,
-        choices=ORDER_STATUS,
+        choices=STATUS_CHOICES,
         default='pending',
         db_index=True,
     )

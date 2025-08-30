@@ -47,7 +47,7 @@ class InitPaymentView(APIView):
                 deposit = Deposit.objects.create(
                     user=user,
                     amount=amount,
-                    status=Deposit.STATUS_PENDING,
+                    status=Deposit.STATUS_APPROVED,
                     transaction_id=tran_id
                 )
 

@@ -30,7 +30,7 @@ export default function Dispute() {
     return (
         <div className="flex-grow overflow-auto p-2.5 md:px-6 md:py-8 bg-gray-50 rounded-xl shadow-inner">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                <span className="text-gray-700 text-base md:text-2xl font-medium">Dispute History</span>
+                <span className="text-gray-700 text-base md:text-2xl font-medium">Support History</span>
                 <div className="flex items-center gap-2">
                     <label className="text-sm text-gray-700 font-medium">Search:</label>
                     <input
@@ -42,7 +42,6 @@ export default function Dispute() {
                     />
                 </div>
             </div>
-
             <div className="overflow-x-auto rounded-xl shadow-lg bg-white">
                 <table className="min-w-full text-sm text-center">
                     <thead className="bg-[#1C2640] text-white text-xs uppercase sticky top-0 z-10">
@@ -115,13 +114,14 @@ export default function Dispute() {
                     </tbody>
                 </table>
             </div>
-
-            <Pagination currentPage={currentPage} totalPages={totalPages} setPage={setPage} />
-
-            {/* Modal */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setPage={setPage}
+            />
             {selected !== null && (
                 <DisputeShow
-                    key={selected} // 🔑 important for resetting animation
+                    key={selected}
                     id={selected}
                     onClose={handleCloseModal}
                     refetch={refetch}

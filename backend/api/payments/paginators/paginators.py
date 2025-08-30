@@ -1,10 +1,11 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+# ALL PAYMENT PAGINATION
 class AllPaymentPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):
@@ -21,10 +22,11 @@ class AllPaymentPagination(PageNumberPagination):
             "data": data,
         })
 
+# DEPOSIT PAGINATION
 class DepositPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):
@@ -40,11 +42,12 @@ class DepositPagination(PageNumberPagination):
             },
             "data": data,
         })
-    
+
+# WITHDRAW PAGINATION
 class WithdrawPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):
@@ -60,11 +63,12 @@ class WithdrawPagination(PageNumberPagination):
             },
             "data": data,
         })
-    
+
+# PAYMENT HISTORY PAGINATION
 class PaymentHistoryPagination(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 2
     page_query_param = 'page'
 
     def get_paginated_response(self, data):
@@ -80,11 +84,12 @@ class PaymentHistoryPagination(PageNumberPagination):
             },
             "data": data,
         })
-    
+
+# COMBINED TRANSACTION PAGINATION
 class CombinedTransactionPagination(PageNumberPagination):
     page_size = 15
     page_size_query_param = 'page_size'
-    max_page_size = 100
+    max_page_size = 15
 
     def get_paginated_response(self, data):
         return Response({

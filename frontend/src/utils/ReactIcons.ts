@@ -9,8 +9,10 @@ import { MdSyncProblem, MdDashboard, MdOutlinePayment, MdReport } from "react-ic
 import { BsChatFill } from "react-icons/bs";
 import { BiGitPullRequest } from "react-icons/bi";
 import { MdManageAccounts } from "react-icons/md";
+import { BiSupport } from "react-icons/bi";
 
 export const ReactIcons = {
+  BiSupport,
   FaRegEdit,
   MdManageAccounts,
   MdReport,

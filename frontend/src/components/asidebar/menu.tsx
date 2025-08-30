@@ -1,6 +1,6 @@
 import type { MenuItemProps } from "../../types/menu/menuProps";
 import { ReactIcons } from "../../utils/ReactIcons";
-const { BsChatFill, FaBorderAll, FaWallet, MdOutlinePayment, MdDashboard, FaNetworkWired, BiGitPullRequest, MdReport, MdManageAccounts } = ReactIcons
+const { BsChatFill, FaBorderAll, FaWallet, MdOutlinePayment, MdDashboard, FaNetworkWired, BiGitPullRequest, MdManageAccounts, BiSupport } = ReactIcons
 
 export const SellerMenu: MenuItemProps[] = [
     {
@@ -41,9 +41,9 @@ export const SellerMenu: MenuItemProps[] = [
     },
     {
         id: 7,
-        name: 'Dispute',
-        path: '/dispute/',
-        icon: <MdReport className="text-2xl" />
+        name: 'Support',
+        path: '/support/',
+        icon: <BiSupport className="text-2xl" />
     },
     {
         id: 8,
@@ -141,9 +141,9 @@ export const BuyerMenu: MenuItemProps[] = [
     },
     {
         id: 7,
-        name: 'Dispute',
-        path: '/dispute/',
-        icon: <MdReport className="text-2xl" />
+        name: 'Support',
+        path: '/support/',
+        icon: <BiSupport className="text-2xl" />
     },
     {
         id: 8,

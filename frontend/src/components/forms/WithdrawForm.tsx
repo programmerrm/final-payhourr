@@ -17,7 +17,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ onSuccess }) => {
             await addWithdraw(data).unwrap();
             toast.success("Your withdraw was successful");
             reset();
-            if (onSuccess) onSuccess(); // close modal
+            if (onSuccess) onSuccess(); 
         } catch (error: any) {
             console.error(error.message);
             toast.error("Your withdraw failed");
@@ -26,6 +26,8 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ onSuccess }) => {
 
     return (
         <form className="space-y-4" onSubmit={handleSubmit(onSubmitForm)}>
+            
+
             <Field label="Amount" error={errors.amount}>
                 <input
                     {...register("amount", { required: "Amount is required" })}
@@ -63,6 +65,8 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = ({ onSuccess }) => {
                     Send
                 </button>
             </div>
+
+
         </form>
     );
 };

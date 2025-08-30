@@ -13,6 +13,7 @@ interface UserInfo {
 }
 
 interface FormData {
+    receiver: number;
     title: string;
     amount: string;
     currency: string;
@@ -33,13 +34,24 @@ export const CreateOfferForm: React.FC<CreateOfferFormProps> = ({
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [fileName, setFileName] = useState("");
     const receiverId = participantsInfo?.id;
+
+    console.log("Participants Info:", participantsInfo);
+    console.log("Receiver ID:", receiverId);
+
     const email = participantsInfo?.email;
     const [addInitPayment] = useAddInitPaymentMutation();
 
     const onSubmitForm = async (data: FormData) => {
         try {
             const formData = new FormData();
+
+            if (!receiverId) {
+                toast.error("Receiver ID missing!");
+                return;
+            }
+
             formData.append("receiver", receiverId.toString());
+
             formData.append("title", data.title);
             formData.append("amount", data.amount);
             formData.append("currency", data.currency);
